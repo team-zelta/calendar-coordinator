@@ -3,7 +3,8 @@
 require 'json'
 require 'base64'
 require 'rbnacl'
-require_relative './datetime'
+
+require_relative 'date_utils'
 
 # Calendar
 module Calendar
@@ -17,8 +18,8 @@ module Calendar
       @summary = event['summary']
       @description = event['description']
       @location = event['location']
-      @start_time = event['start']
-      @end_time = event['end']
+      @start_time = DateUtils.new(event['start'])
+      @end_time = DateUtils.new(event['end'])
     end
 
     attr_reader :id, :status, :summary, :description, :location, :start_time, :end_time
@@ -31,8 +32,8 @@ module Calendar
           summary: summary,
           description: description,
           location: location,
-          start: DateTime.new(start_time).to_json.to_s,
-          end: DateTime.new(end_time).to_json.to_s
+          start: start_time,
+          end: end_time
         },
         options
       )
