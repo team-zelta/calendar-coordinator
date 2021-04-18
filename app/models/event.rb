@@ -57,7 +57,7 @@ module Calendar
     # Find all Event
     def self.all
       Dir.glob("#{Calendar::STORE_DIR}/*.txt").map do |file|
-        file.match(%r{#{Regexp.quote(Calendar::STORE_DIR)}/(.*)/\.txt})[1]
+        file.match(%r{#{Regexp.quote(Calendar::STORE_DIR)}/(.*)\.txt})[1]
       end
     end
 
