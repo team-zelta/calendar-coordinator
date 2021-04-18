@@ -12,6 +12,8 @@ module Calendar
 
   # Event Entity
   class Event
+    include Common
+
     def initialize(event)
       @id = event['id'] || new_id
       @status = event['status']

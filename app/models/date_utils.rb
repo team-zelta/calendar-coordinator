@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-# Calendar
-module Calendar
+# Common
+module Common
   # DateUtils Entity
   class DateUtils
     def initialize(time)
