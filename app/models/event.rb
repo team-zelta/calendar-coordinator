@@ -3,6 +3,7 @@
 require 'json'
 require 'base64'
 require 'rbnacl'
+require_relative './datetime'
 
 # Calendar
 module Calendar
@@ -25,14 +26,13 @@ module Calendar
     def to_json(options = {})
       JSON(
         {
-          type: 'event',
           id: id,
           status: status,
           summary: summary,
           description: description,
           location: location,
-          start: start_time,
-          end: end_time
+          start: DateTime.new(start_time).to_json.to_s,
+          end: DateTime.new(end_time).to_json.to_s
         },
         options
       )
