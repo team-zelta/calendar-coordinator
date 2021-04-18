@@ -7,7 +7,12 @@ Metrics/BlockLength:
   Enabled: true
   Exclude:
     - spec/**/*
+    - app/controllers/*
     - Rakefile
+
+Metrics/MethodLength:
+  Enabled: true
+  Max: 20
 
 Security/YAMLLoad:
   Enabled: true
