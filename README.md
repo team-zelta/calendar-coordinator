@@ -1,7 +1,8 @@
 # calendar-coordinator
 
-## Create Event
-### Request
+## Event
+### Create
+#### Request
 ```
 POST 'http://127.0.0.1:9292/api/v1/events' 
 
@@ -24,7 +25,7 @@ POST 'http://127.0.0.1:9292/api/v1/events'
 }
 ```
 
-### Response
+#### Response
 ```
 {
     "message": "Event saved",
@@ -32,13 +33,13 @@ POST 'http://127.0.0.1:9292/api/v1/events'
 }
 ```
 
-## Get Event by id
-### Request
+### Get by id
+#### Request
 ```
 GET 'http://127.0.0.1:9292/api/v1/events/{id}'
 ```
 
-### Response
+#### Response
 ```
 {
     "id": 1001,
@@ -59,13 +60,13 @@ GET 'http://127.0.0.1:9292/api/v1/events/{id}'
 }
 ```
 
-## Get all Events id
-### Request
+### Get all id
+#### Request
 ```
 GET 'http://127.0.0.1:9292/api/v1/events'
 ```
 
-### Response
+#### Response
 ```
 [
     "1001",
