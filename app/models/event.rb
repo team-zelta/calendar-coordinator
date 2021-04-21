@@ -26,7 +26,7 @@ module Calendar
 
     attr_reader :id, :status, :summary, :description, :location, :start_time, :end_time
 
-    def to_json(options = {})
+    def to_json(options = {}) # rubocop:disable Metrics/MethodLength
       JSON(
         {
           id: id,

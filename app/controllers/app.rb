@@ -16,7 +16,7 @@ module Calendar
       Event.setup
     end
 
-    route do |routing|
+    route do |routing| # rubocop:disable Metrics/BlockLength
       response['Content-Type'] = 'application/json'
 
       routing.root do
@@ -24,7 +24,7 @@ module Calendar
         { message: 'Calendar API up at /api/v1' }.to_json
       end
 
-      routing.on 'api' do
+      routing.on 'api' do # rubocop:disable Metrics/BlockLength
         routing.on 'v1' do
           routing.on 'events' do
             # GET /api/v1/events/{id}
