@@ -6,6 +6,8 @@ GEM
     ffi (1.15.0)
     json (2.5.1)
     minitest (5.14.4)
+    minitest-rg (5.2.0)
+      minitest (~> 5.0)
     nio4r (2.5.7)
     parallel (1.20.1)
     parser (3.0.1.0)
@@ -13,6 +15,8 @@ GEM
     puma (5.2.2)
       nio4r (~> 2.0)
     rack (2.2.3)
+    rack-test (1.1.0)
+      rack (>= 1.0, < 3)
     rainbow (3.0.0)
     rake (13.0.3)
     rbnacl (7.1.1)
@@ -43,7 +47,9 @@ DEPENDENCIES
   base64
   json
   minitest
+  minitest-rg
   puma (~> 5)
+  rack-test
   rake
   rbnacl
   roda (~> 3)
