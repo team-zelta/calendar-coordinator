@@ -4,8 +4,6 @@ require 'json'
 require 'base64'
 require 'rbnacl'
 
-require_relative 'date_utils'
-
 # Calendar
 module Calendar
   # Calendar Class
