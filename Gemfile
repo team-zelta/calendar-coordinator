@@ -15,6 +15,8 @@ gem 'base64'
 
 # Testing
 gem 'minitest'
+gem 'minitest-rg'
+gem 'rack-test'
 gem 'rake'
 
 # Static

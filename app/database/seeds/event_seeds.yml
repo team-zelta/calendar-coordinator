@@ -1,0 +1,27 @@
+---
+- id: 1001
+  status: "confirmed"
+  summary: "Project Meeting"
+  description: "Discuss the progress of the project."
+  location: "NTHU"
+  start:
+    date: ""
+    date_time: "2021-06-12 14:00:00.00+08:00"
+    time_zone": "Taiwan"
+  end:
+    date: ""
+    date_time: "2021-06-12 15:30:00.00+08:00"
+    time_zone: "Taiwan"
+- id: 1002
+  status: "confirmed"
+  summary: "Project Meeting"
+  description: "Discuss the progress of the project."
+  location: "Taipei"
+  start:
+    date: ""
+    date_time: "2021-06-13 14:00:00.00+08:00"
+    time_zone": "Taiwan"
+  end:
+   date: ""
+   date_time: "2021-06-13 15:30:00.00+08:00"
+   time_zone: "Taiwan"
