@@ -3,6 +3,9 @@ GEM
   specs:
     ast (2.4.2)
     base64 (0.1.0)
+    bundler-audit (0.8.0)
+      bundler (>= 1.2.0, < 3)
+      thor (~> 1.0)
     ffi (1.15.0)
     json (2.5.1)
     minitest (5.14.4)
@@ -36,7 +39,11 @@ GEM
       unicode-display_width (>= 1.4.0, < 3.0)
     rubocop-ast (1.4.1)
       parser (>= 2.7.1.5)
+    rubocop-performance (1.11.0)
+      rubocop (>= 1.7.0, < 2.0)
+      rubocop-ast (>= 0.4.0)
     ruby-progressbar (1.11.0)
+    thor (1.1.0)
     unicode-display_width (2.0.0)
 
 PLATFORMS
@@ -46,6 +53,7 @@ PLATFORMS
 
 DEPENDENCIES
   base64
+  bundler-audit
   json
   minitest
   minitest-rg
@@ -55,6 +63,7 @@ DEPENDENCIES
   rbnacl
   roda (~> 3)
   rubocop
+  rubocop-performance
 
 BUNDLED WITH
    2.2.16
