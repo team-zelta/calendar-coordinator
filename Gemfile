@@ -7,7 +7,11 @@ gem 'json'
 gem 'puma', '~>5'
 gem 'roda', '~>3'
 
+# Performance
+gem 'rubocop-performance'
+
 # Security
+gem 'bundler-audit'
 gem 'rbnacl'
 
 # Encode

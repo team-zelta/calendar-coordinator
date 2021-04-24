@@ -9,22 +9,23 @@ require_relative '../app/controllers/app'
 require_relative '../app/models/event'
 
 def app
-  Calendar::API
+  CalendarCoordinator::API
 end
 
 DATA = YAML.safe_load(File.read('app/database/seeds/event_seeds.yml'))
+STORE_DIR = 'app/database/store'
 
-describe 'Test Calendar Web API - event' do
+describe 'Test CalendarCoordinator Web API - event' do
   include Rack::Test::Methods
 
   before do
-    Dir.glob("#{Calendar::STORE_DIR}/*.txt").each { |filename| FileUtils.rm(filename) }
+    Dir.glob("#{STORE_DIR}/*.txt").each { |filename| FileUtils.rm(filename) }
   end
 
   # Get all events id
   it 'should be able to get list of all events id' do
-    Calendar::Event.new(DATA[0]).save
-    Calendar::Event.new(DATA[1]).save
+    CalendarCoordinator::Event.new(DATA[0]).save
+    CalendarCoordinator::Event.new(DATA[1]).save
 
     get 'api/v1/events'
     result = JSON.parse(last_response.body)
@@ -34,7 +35,7 @@ describe 'Test Calendar Web API - event' do
 
   # Get event by id
   it 'should be able to get event by id' do
-    Calendar::Event.new(DATA[0]).save
+    CalendarCoordinator::Event.new(DATA[0]).save
     id = 1001
 
     get "api/v1/events/#{id}"

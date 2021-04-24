@@ -4,10 +4,10 @@ require 'json'
 require 'base64'
 require 'rbnacl'
 
-# Calendar
-module Calendar
+# CalendarCoordinator
+module CalendarCoordinator
   # Calendar Class
-  class MyCalendar
+  class Calendar
     STORE_DIR = 'app/database/store/calendars'
 
     def initialize(calendar)

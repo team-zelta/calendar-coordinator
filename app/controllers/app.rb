@@ -4,10 +4,10 @@ require 'roda'
 require 'json'
 
 require_relative '../models/event'
-require_relative '../models/my_calendar'
+require_relative '../models/calendar'
 
 # Calendar
-module Calendar
+module CalendarCoordinator
   # WebAPI controller
   class API < Roda
     plugin :environments
@@ -15,7 +15,7 @@ module Calendar
 
     configure do
       Event.setup
-      MyCalendar.setup
+      Calendar.setup
     end
 
     route do |routing| # rubocop:disable Metrics/BlockLength
@@ -63,7 +63,7 @@ module Calendar
             # GET /api/v1/calendars/{id}
             routing.get String do |id|
               response.status = 200
-              MyCalendar.find(id).to_json
+              Calendar.find(id).to_json
             rescue StandardError
               routing.halt 404, { message: 'Calendar not found' }.to_json
             end
@@ -71,7 +71,7 @@ module Calendar
             # GET /api/v1/calendars
             routing.get do
               response.status = 200
-              JSON.pretty_generate(MyCalendar.all)
+              JSON.pretty_generate(Calendar.all)
             rescue StandardError
               routing.halt 500, { message: 'Server error' }.to_json
             end
@@ -80,7 +80,7 @@ module Calendar
             routing.post do
               # puts "body: #{JSON.parse(routing.body.read)}"
               data = JSON.parse(routing.body.read)
-              calendar = MyCalendar.new(data)
+              calendar = Calendar.new(data)
 
               if calendar.save
                 response.status = 201
