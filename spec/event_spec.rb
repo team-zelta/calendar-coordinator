@@ -13,7 +13,7 @@ def app
 end
 
 DATA = YAML.safe_load(File.read('app/database/seeds/event_seeds.yml'))
-STORE_DIR = 'app/database/store/events'
+STORE_DIR = 'app/database/store'
 
 describe 'Test CalendarCoordinator Web API - event' do
   include Rack::Test::Methods

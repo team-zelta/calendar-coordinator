@@ -6,7 +6,7 @@ require 'rbnacl'
 
 # CalendarCoordinator
 module CalendarCoordinator
-  STORE_DIR = 'app/database/store/events'
+  STORE_DIR = 'app/database/store'
 
   # Event Entity
   class Event
