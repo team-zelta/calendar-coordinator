@@ -8,10 +8,10 @@ require 'yaml'
 require_relative '../app/controllers/app'
 
 def app
-  Calendar::API
+  CalendarCoordinator::API
 end
 
-describe 'Test Calendar Web API - root' do
+describe 'Test CalendarCoordinator Web API - root' do
   include Rack::Test::Methods
 
   it 'should find the root route' do
