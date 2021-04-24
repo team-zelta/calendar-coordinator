@@ -4,24 +4,21 @@
   summary: "Project Meeting"
   description: "Discuss the progress of the project."
   location: "NTHU"
-  start:
-    date: ""
-    date_time: "2021-06-12 14:00:00.00+08:00"
-    time_zone": "Taiwan"
-  end:
-    date: ""
-    date_time: "2021-06-12 15:30:00.00+08:00"
-    time_zone: "Taiwan"
+  start_date: ""
+  start_date_time: "2021-04-19T09:00:00+08:00"
+  start_time_zone: "Asia/Taipei"
+  end_date: ""
+  end_date_time: "2021-04-19T12:00:00+08:00"
+  end_time_zone: "Asia/Taipei"
+
 - id: 1002
   status: "confirmed"
   summary: "Project Meeting"
   description: "Discuss the progress of the project."
-  location: "Taipei"
-  start:
-    date: ""
-    date_time: "2021-06-13 14:00:00.00+08:00"
-    time_zone": "Taiwan"
-  end:
-   date: ""
-   date_time: "2021-06-13 15:30:00.00+08:00"
-   time_zone: "Taiwan"
+  location: "New Taipei"
+  start_date: ""
+  start_date_time: "2021-04-19T09:00:00+08:00"
+  start_time_zone: "Asia/Taipei"
+  end_date: ""
+  end_date_time: "2021-04-19T12:00:00+08:00"
+  end_time_zone: "Asia/Taipei"
