@@ -36,12 +36,12 @@ jobs:
       run: sudo apt-get -yqq install libsodium23
 
     - name: Check Vulnerable Dependencies
-      run: bundle exec rake audit
+      run: rake audit
 
     - name: Run Tests
-      run: bundle exec rake spec
+      run: rake spec
     
     - name: Check Style and Performance
-      run: bundle exec rake style
+      run: rake style
 
     
