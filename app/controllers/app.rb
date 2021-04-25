@@ -59,15 +59,15 @@ module CalendarCoordinator
                 routing.halt 500, { message: e.message }.to_json
               end
             end
-          end
 
-          # GET /api/v1/calendars/{id}
-          routing.get String do |calendar_id|
-            response.status = 200
-            calendar = Calendar.first(id: calendar_id)
-            calendar ? calendar.to_json : raise('Calendar not found')
-          rescue StandardError => e
-            routing.halt 404, { message: e.message }.to_json
+            # GET /api/v1/calendars/{id}
+            routing.get do
+              response.status = 200
+              calendar = Calendar.first(id: calendar_id)
+              calendar ? calendar.to_json : raise('Calendar not found')
+            rescue StandardError => e
+              routing.halt 404, { message: e.message }.to_json
+            end
           end
 
           # GET /api/v1/calendars
