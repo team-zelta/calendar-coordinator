@@ -22,8 +22,10 @@ module CalendarCoordinator
       Figaro.env
     end
 
+    DB = Sequel.connect(config.DATABASE_URL)
+
     def self.DB # rubocop:disable Naming/MethodName
-      Sequel.connect(config.DATABASE_URL)
+      DB
     end
 
     configure :development, :test do
