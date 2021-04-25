@@ -23,8 +23,8 @@ gem 'minitest-rg'
 gem 'rack-test'
 
 # Configuration
-gem 'rake'
 gem 'figaro'
+gem 'rake'
 
 # Database
 gem 'hirb'
@@ -35,3 +35,6 @@ end
 
 # Static
 gem 'rubocop'
+group :development do
+  gem 'solargraph'
+end
