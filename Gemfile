@@ -33,8 +33,9 @@ group :development, :test do
   gem 'sqlite3'
 end
 
-# Static
+# Development
 gem 'rubocop'
+gem 'pry'
 group :development do
   gem 'solargraph'
 end
