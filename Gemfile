@@ -18,9 +18,11 @@ gem 'rbnacl'
 gem 'base64'
 
 # Testing
-gem 'minitest'
-gem 'minitest-rg'
-gem 'rack-test'
+group :test do
+  gem 'minitest'
+  gem 'minitest-rg'
+  gem 'rack-test'
+end
 
 # Configuration
 gem 'figaro'
@@ -34,8 +36,8 @@ group :development, :test do
 end
 
 # Development
-gem 'rubocop'
 gem 'pry'
+gem 'rubocop'
 group :development do
   gem 'solargraph'
 end
