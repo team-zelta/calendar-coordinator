@@ -46,7 +46,16 @@ module CalendarCoordinator
               # POST /api/v1/calendars/{calendar_id}/events
               routing.post do
                 data = JSON.parse(routing.body.read)
-                calendar = Calendar.first(id: calendar_id)
+                event_data = Event.new(data)
+
+                # Check existed
+                event = Event.where(calendar_id: calendar_id, id: event_data.id).first
+                if !event.nil? && event.id == event_data.id
+                  response.status = 200
+                  return { message: 'Event existed', event_id: event.id }.to_json
+                end
+
+                calendar = Calendar.find(id: calendar_id)
                 event = calendar.add_event(data)
 
                 if event
@@ -63,7 +72,7 @@ module CalendarCoordinator
             # GET /api/v1/calendars/{id}
             routing.get do
               response.status = 200
-              calendar = Calendar.first(id: calendar_id)
+              calendar = Calendar.find(id: calendar_id)
               calendar ? calendar.to_json : raise('Calendar not found')
             rescue StandardError => e
               routing.halt 404, { message: e.message }.to_json
@@ -80,10 +89,17 @@ module CalendarCoordinator
 
           # POST /api/v1/calendars
           routing.post do
-            # puts "body: #{JSON.parse(routing.body.read)}"
             data = JSON.parse(routing.body.read)
-            calendar = Calendar.create(data)
+            calendar_data = Calendar.new(data)
 
+            # Check existed
+            calendar = Calendar.find(id: calendar_data.id)
+            if !calendar.nil? && calendar.id == calendar_data.id
+              response.status = 200
+              return { message: 'Calendar existed', calendar_id: calendar_data.id }.to_json
+            end
+
+            calendar = Calendar.create(data)
             if calendar
               response.status = 201
               { message: 'Calendar saved', calendar_id: calendar.id }.to_json
