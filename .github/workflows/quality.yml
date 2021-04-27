@@ -36,8 +36,7 @@ jobs:
       run: sudo apt-get -yqq install libsodium23
 
     - name: Check Vulnerable Dependencies
-      run: mkdir app/store
-           chmod 777 app/store
+      run: mkdir app/database/store
            bundle exec rake audit
 
     - name: Run Tests
