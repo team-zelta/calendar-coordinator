@@ -8,3 +8,5 @@ def require_app(folders = %w[models controllers])
     require file
   end
 end
+
+require_app
