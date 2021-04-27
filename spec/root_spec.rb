@@ -5,7 +5,8 @@ require 'minitest/rg'
 require 'rack/test'
 require 'yaml'
 
-require_relative '../app/controllers/app'
+require_relative '../require_app'
+require_app
 
 def app
   CalendarCoordinator::API
