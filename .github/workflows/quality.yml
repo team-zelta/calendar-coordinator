@@ -37,6 +37,7 @@ jobs:
 
     - name: Check Vulnerable Dependencies
       run: mkdir app/store
+           chmod 777 app/store
            bundle exec rake audit
 
     - name: Run Tests
