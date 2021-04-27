@@ -40,7 +40,7 @@ jobs:
            bundle exec rake audit
 
     - name: Run Tests
-      run: bundle exec RACK_ENV=test rake db:migrate 
+      run: bundle exec rake db:migrate RACK_ENV=test 
            bundle exec rake spec
     
     - name: Check Style and Performance
