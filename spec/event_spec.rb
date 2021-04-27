@@ -5,9 +5,9 @@ require 'minitest/rg'
 require 'rack/test'
 require 'yaml'
 
-require_relative '../config/environments'
-require_relative '../app/controllers/app'
-require_relative '../app/models/event'
+require_relative '../require_app'
+require_app
+
 require_relative 'spec_helper'
 
 describe 'Test CalendarCoordinator Web API - event' do
