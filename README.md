@@ -24,6 +24,11 @@ Install by cloning the relevant branch and installing required gems from `Gemfil
 bundle install
 ```
 
+Create database directory before setting the database:
+```
+mkdir app/database/store
+```
+
 Setup development database once:
 ```
 rake db:migrate
