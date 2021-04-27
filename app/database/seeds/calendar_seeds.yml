@@ -1,0 +1,14 @@
+---
+- id: "sample1@gmail.com"
+  summary: "Project Meeting"
+  description: "Discuss the progress of the project."
+  location: "NTHU"
+  time_zone: "Asia/Taipei"
+  access_role: ""
+
+- id: "sample2@gmail.com"
+  summary: "Project Meeting"
+  description: "Discuss the progress of the project."
+  location: "NTHU"
+  time_zone: "Asia/Taipei"
+  access_role: ""

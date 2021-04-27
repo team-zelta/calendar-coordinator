@@ -18,10 +18,26 @@ gem 'rbnacl'
 gem 'base64'
 
 # Testing
-gem 'minitest'
-gem 'minitest-rg'
-gem 'rack-test'
+group :test do
+  gem 'minitest'
+  gem 'minitest-rg'
+  gem 'rack-test'
+end
+
+# Configuration
+gem 'figaro'
 gem 'rake'
 
-# Static
+# Database
+gem 'hirb'
+gem 'sequel'
+group :development, :test do
+  gem 'sqlite3'
+end
+
+# Development
+gem 'pry'
 gem 'rubocop'
+group :development do
+  gem 'solargraph'
+end

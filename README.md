@@ -7,12 +7,14 @@ A Web application that through the permissions of common calendars such as Googl
 All routes return JSON.
 
 - GET `/`: Root route shows if Web API is running.
-- GET `api/v1/events`: Get list of all events id.
-- GET `api/v1/events/{id}`: Get event by id.
-- POST `api/v1/events`: Create event.
-- GET `api/v1/calendars`: Get list of all calendars id
+
+- GET `api/v1/calendars`: Get all calendars.
 - GET `api/v1/calendars/{id}`: Get calendar by id.
 - POST `api/v1/calendars`: Create calendar.
+
+- GET `api/v1/calendars/{calendar_id}/events`: Get all events by calendar id.
+- GET `api/v1/calendars/{calendar_id}/events/{event_id}`: Get event by calendar id and event id.
+- POST `api/v1/calendars/{calendar_id}/events`: Create event.
 
 ## Install
 
@@ -35,5 +37,5 @@ rackup
 Run the test through Rakefile.
 
 ```
-rake test
+rake spec
 ```
