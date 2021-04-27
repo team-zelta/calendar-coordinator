@@ -38,6 +38,7 @@ namespace :db do
   desc 'Delete table'
   task :delete do
     app.DB[:events].delete
+    app.DB[:calendars].delete
   end
 
   desc 'Delete dev or test database file'

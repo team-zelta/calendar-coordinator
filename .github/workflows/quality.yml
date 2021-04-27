@@ -40,7 +40,8 @@ jobs:
            bundle exec rake audit
 
     - name: Run Tests
-      run: bundle exec rake spec
+      run: bundle exec rake db:migrate 
+           bundle exec rake spec
     
     - name: Check Style and Performance
       run: bundle exec rake style
