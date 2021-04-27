@@ -17,6 +17,11 @@ task :style do
   sh 'rubocop'
 end
 
+desc 'Run application console (pry)'
+task console: :print_env do
+  sh 'pry -r ./require_app'
+end
+
 desc 'Print the environment'
 task :print_env do
   puts "Environment: #{ENV['RACK_ENV'] || 'development'}"
