@@ -39,13 +39,12 @@ rackup
 
 ## Test
 
-Run the test through Rakefile.
-
 Setup test database once:
 ```
 RACK_ENV=test rake db:migrate
 ```
 
+Run the test through Rakefile.
 ```
 rake spec
 ```
