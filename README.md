@@ -24,6 +24,11 @@ Install by cloning the relevant branch and installing required gems from `Gemfil
 bundle install
 ```
 
+Setup development database once:
+```
+rake db:migrate
+```
+
 ## Execute
 
 Run this app by using:
@@ -35,6 +40,11 @@ rackup
 ## Test
 
 Run the test through Rakefile.
+
+Setup test database once:
+```
+RACK_ENV=test rake db:migrate
+```
 
 ```
 rake spec
