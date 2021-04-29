@@ -96,7 +96,7 @@ module CalendarCoordinator
             calendar = Calendar.find(id: calendar_data.id)
             if !calendar.nil? && calendar.id == calendar_data.id
               response.status = 200
-              return { message: 'Calendar existed', calendar_id: calendar_data.id }.to_json
+              return { message: 'Calendar existed', calendar_id: calendar_data.gid }.to_json
             end
 
             calendar = Calendar.create(data)
