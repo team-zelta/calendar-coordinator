@@ -8,7 +8,6 @@ module CalendarCoordinator
   # Calendar Class
   class Calendar < Sequel::Model
     # Enable primary key setter
-    unrestrict_primary_key
 
     # Defind relationships between models
     one_to_many :event

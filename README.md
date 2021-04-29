@@ -25,11 +25,13 @@ bundle install
 ```
 
 Create database directory before setting the database:
+
 ```
 mkdir app/database/store
 ```
 
 Setup development database once:
+
 ```
 rake db:migrate
 ```
@@ -45,11 +47,13 @@ rackup
 ## Test
 
 Setup test database once:
+
 ```
 RACK_ENV=test rake db:migrate
 ```
 
 Run the test through Rakefile.
+
 ```
 rake spec
 ```
