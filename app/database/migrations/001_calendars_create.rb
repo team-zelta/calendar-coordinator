@@ -1,12 +1,14 @@
 # frozen_string_literal: true
 
 require 'sequel'
+require 'securerandom'
 
 Sequel.migration do
   change do
     create_table(:calendars) do
-      primary_key :id
+      uuid :id, primary_key: true
 
+      String :email, null: false
       String :summary, null: false
       String :description
       String :location

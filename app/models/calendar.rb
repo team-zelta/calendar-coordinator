@@ -16,10 +16,13 @@ module CalendarCoordinator
     # Auto set created_at & updated_at
     plugin :timestamps
 
+    plugin :uuid, field: :id
+
     def to_json(options = {}) # rubocop:disable Metrics/MethodLength
       JSON(
         {
           id: id,
+          email: email,
           summary: summary,
           description: description,
           location: location,

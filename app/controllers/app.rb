@@ -46,14 +46,6 @@ module CalendarCoordinator
               # POST /api/v1/calendars/{calendar_id}/events
               routing.post do
                 data = JSON.parse(routing.body.read)
-                event_data = Event.new(data)
-
-                # Check existed
-                event = Event.where(calendar_id: calendar_id, id: event_data.id).first
-                if !event.nil? && event.id == event_data.id
-                  response.status = 200
-                  return { message: 'Event existed', event_id: event.id }.to_json
-                end
 
                 calendar = Calendar.find(id: calendar_id)
                 event = calendar.add_event(data)
@@ -90,14 +82,6 @@ module CalendarCoordinator
           # POST /api/v1/calendars
           routing.post do
             data = JSON.parse(routing.body.read)
-            calendar_data = Calendar.new(data)
-
-            # Check existed
-            calendar = Calendar.find(id: calendar_data.id)
-            if !calendar.nil? && calendar.id == calendar_data.id
-              response.status = 200
-              return { message: 'Calendar existed', calendar_id: calendar_data.gid }.to_json
-            end
 
             calendar = Calendar.create(data)
             if calendar
