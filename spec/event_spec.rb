@@ -41,17 +41,17 @@ describe 'Test CalendarCoordinator Web API - event' do
   # Get event by id
   it 'HAPPY: should be able to get event by id' do
     calendar_id = CalendarCoordinator::Calendar.first.id
-    event_id = 'abc001'
+    event_id = CalendarCoordinator::Event.first.id
 
     get "api/v1/calendars/#{calendar_id}/events/#{event_id}"
 
     result = JSON.parse(last_response.body)
-    _(result['id']).must_equal 'abc001'
+    _(result['gid']).must_equal 'abc001'
   end
 
   it 'SAD: should not be able to get event by id due to event not exist' do
     calendar_id = CalendarCoordinator::Calendar.first.id
-    event_id = 'abc000'
+    event_id = '00000000-0000-0000-0000-000000000000'
 
     get "api/v1/calendars/#{calendar_id}/events/#{event_id}"
 
@@ -71,8 +71,7 @@ describe 'Test CalendarCoordinator Web API - event' do
   it 'HAPPY: should be able to create event' do
     calendar_id = CalendarCoordinator::Calendar.first.id
 
-    event = CalendarCoordinator::Event.new(id: 'abc000',
-                                           summary: 'Project Meeting')
+    event = CalendarCoordinator::Event.new(summary: 'Project Meeting')
 
     req_header = { 'Content-Type' => 'application/json' }
     post "api/v1/calendars/#{calendar_id}/events", event.to_json, req_header
@@ -80,19 +79,5 @@ describe 'Test CalendarCoordinator Web API - event' do
     result = JSON.parse(last_response.body)
     _(last_response.status).must_equal 201
     _(result['message']).must_equal 'Event saved'
-  end
-
-  it 'SAD: should not be able to create event due to existed event' do
-    calendar_id = CalendarCoordinator::Calendar.first.id
-
-    event = CalendarCoordinator::Event.new(id: 'abc001',
-                                           summary: 'Project Meeting')
-
-    req_header = { 'Content-Type' => 'application/json' }
-    post "api/v1/calendars/#{calendar_id}/events", event.to_json, req_header
-
-    result = JSON.parse(last_response.body)
-    _(last_response.status).must_equal 200
-    _(result['message']).must_equal 'Event existed'
   end
 end
