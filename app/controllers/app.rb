@@ -56,6 +56,8 @@ module CalendarCoordinator
                 else
                   routing.halt 400, { message: 'Save Event failed' }.to_json
                 end
+              rescue Sequel::MassAssignmentRestriction => e
+                routing.halt 400, { message: "Illegal Attributes : #{e}" }.to_json
               rescue StandardError => e
                 routing.halt 500, { message: e.message }.to_json
               end
@@ -90,6 +92,8 @@ module CalendarCoordinator
             else
               routing.halt 400, { message: 'Save Calendar failed' }.to_json
             end
+          rescue Sequel::MassAssignmentRestriction => e
+            routing.halt 400, { message: "Illegal Attributes : #{e}" }.to_json
           rescue StandardError => e
             routing.halt 500, { message: e.message }.to_json
           end
