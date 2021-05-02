@@ -17,6 +17,8 @@ module CalendarCoordinator
     plugin :timestamps
 
     plugin :uuid, field: :id
+    plugin :whitelist_security
+    set_allowed_columns :summary, :description, :location, :time_zone, :access_role
 
     # Secure getters and setters
     def summary

@@ -3,6 +3,7 @@
 require 'roda'
 require 'figaro'
 require 'sequel'
+require './app/lib/secure_db'
 
 # CalendarCoordinator
 module CalendarCoordinator

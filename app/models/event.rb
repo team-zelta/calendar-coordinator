@@ -18,6 +18,10 @@ module CalendarCoordinator
     plugin :timestamps
 
     plugin :uuid, field: :id
+    plugin :whitelist_security
+    set_allowed_columns :gid, :summary, :status, :description, :location,
+                        :start_date, :start_date_time, :start_time_zone,
+                        :end_date, :end_date_time, :end_time_zone
 
     # Secure getters and setters
     def gid
