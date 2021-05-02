@@ -8,6 +8,8 @@ require 'yaml'
 require_relative '../require_app'
 require_relative 'spec_helper'
 
+require_app
+
 describe 'Test CalendarCoordinator Web API - event' do
   include Rack::Test::Methods
 
