@@ -57,6 +57,16 @@ describe 'Test CalendarCoordinator Web API - calendar' do
     _(result['message']).must_equal 'Calendar saved'
   end
 
+  it 'SECURITY: should not be able to create calendar by mass assignment' do
+    sample_calendar = DATA[:calendars][1].clone
+    sample_calendar['id'] = '00000000-0000-0000-0000-000000000000'
+
+    req_header = { 'Content-Type' => 'application/json' }
+    post 'api/v1/calendars', sample_calendar.to_json, req_header
+
+    _(last_response.status).must_equal 400
+  end
+
   ## Wait for User model
 
   # it 'SAD: should not be able to create calendar due to existed calendar under the same account' do
