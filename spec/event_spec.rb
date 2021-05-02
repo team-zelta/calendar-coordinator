@@ -82,4 +82,16 @@ describe 'Test CalendarCoordinator Web API - event' do
     _(last_response.status).must_equal 201
     _(result['message']).must_equal 'Event saved'
   end
+
+  it 'SECURITY: should not be able to create event with mass assignment' do
+    calendar_id = CalendarCoordinator::Calendar.first.id
+
+    event = DATA[:events][0].clone
+    event['id'] = '00000000-0000-0000-0000-000000000000'
+
+    req_header = { 'Content-Type' => 'application/json' }
+    post "api/v1/calendars/#{calendar_id}/events", event.to_json, req_header
+
+    _(last_response.status).must_equal 400
+  end
 end
