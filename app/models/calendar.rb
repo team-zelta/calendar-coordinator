@@ -22,7 +22,6 @@ module CalendarCoordinator
       JSON(
         {
           id: id,
-          email: email,
           summary: summary,
           description: description,
           location: location,

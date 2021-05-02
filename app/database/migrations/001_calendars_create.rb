@@ -8,7 +8,6 @@ Sequel.migration do
     create_table(:calendars) do
       uuid :id, primary_key: true
 
-      String :email, null: false
       String :summary, null: false
       String :description
       String :location
