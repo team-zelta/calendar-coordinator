@@ -8,6 +8,8 @@ require 'yaml'
 require_relative '../require_app'
 require_relative 'spec_helper'
 
+require_app
+
 describe 'Test CalendarCoordinator Web API - event' do
   include Rack::Test::Methods
 
@@ -71,7 +73,7 @@ describe 'Test CalendarCoordinator Web API - event' do
   it 'HAPPY: should be able to create event' do
     calendar_id = CalendarCoordinator::Calendar.first.id
 
-    event = CalendarCoordinator::Event.new(summary: 'Project Meeting')
+    event = DATA[:events][0]
 
     req_header = { 'Content-Type' => 'application/json' }
     post "api/v1/calendars/#{calendar_id}/events", event.to_json, req_header

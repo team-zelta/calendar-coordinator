@@ -18,6 +18,43 @@ module CalendarCoordinator
     plugin :timestamps
 
     plugin :uuid, field: :id
+    plugin :whitelist_security
+    set_allowed_columns :gid, :summary, :status, :description, :location,
+                        :start_date, :start_date_time, :start_time_zone,
+                        :end_date, :end_date_time, :end_time_zone
+
+    # Secure getters and setters
+    def gid
+      SecureDB.decrypt(gid_secure)
+    end
+
+    def gid=(plaintext)
+      self.gid_secure = SecureDB.encrypt(plaintext)
+    end
+
+    def summary
+      SecureDB.decrypt(summary_secure)
+    end
+
+    def summary=(plaintext)
+      self.summary_secure = SecureDB.encrypt(plaintext)
+    end
+
+    def description
+      SecureDB.decrypt(description_secure)
+    end
+
+    def description=(plaintext)
+      self.description_secure = SecureDB.encrypt(plaintext)
+    end
+
+    def location
+      SecureDB.decrypt(location_secure)
+    end
+
+    def location=(plaintext)
+      self.location_secure = SecureDB.encrypt(plaintext)
+    end
 
     def to_json(options = {}) # rubocop:disable Metrics/MethodLength
       JSON(
