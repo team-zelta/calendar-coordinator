@@ -2,6 +2,7 @@
 
 require 'roda'
 require 'figaro'
+require 'logger'
 require 'sequel'
 require './app/lib/secure_db'
 
@@ -11,26 +12,25 @@ module CalendarCoordinator
   class API < Roda
     plugin :environments
 
-    # Load configuration
+    # Environment variables setup
     Figaro.application = Figaro::Application.new(
       environment: environment,
       path: File.expand_path('config/secrets.yml')
     )
     Figaro.load
+    def self.config() = Figaro.env
 
-    # Make the database accessible to other classes
-    def self.config
-      Figaro.env
-    end
+    # Logger setup
+    LOGGER = Logger.new($stderr)
+    def self.logger() = LOGGER
 
-    DB = Sequel.connect(config.DATABASE_URL)
-
-    def self.DB # rubocop:disable Naming/MethodName
-      DB
-    end
+    # Database Setup
+    DB = Sequel.connect(ENV.delete('DATABASE_URL'))
+    def self.DB() = DB # rubocop:disable Naming/MethodName
 
     configure :development, :test do
       require 'pry'
+      logger.level = Logger::ERROR
     end
   end
 end
