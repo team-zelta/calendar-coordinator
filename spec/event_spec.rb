@@ -1,14 +1,6 @@
 # frozen_string_literal: true
 
-require 'minitest/autorun'
-require 'minitest/rg'
-require 'rack/test'
-require 'yaml'
-
-require_relative '../require_app'
 require_relative 'spec_helper'
-
-require_app
 
 describe 'Test CalendarCoordinator Web API - event' do
   include Rack::Test::Methods
@@ -67,6 +59,15 @@ describe 'Test CalendarCoordinator Web API - event' do
     get "api/v1/calendars/#{calendar_id}/events/foo"
 
     _(last_response.status).must_equal 404
+  end
+
+  it 'SECURITY: should prevent basic SQL injection targeting IDs' do
+    calendar_id = CalendarCoordinator::Calendar.first.id
+    get "api/v1/calendars/#{calendar_id}/events/2%20or%20id%3E0"
+
+    # deliberately not reporting error -- don't give attacker information
+    _(last_response.status).must_equal 404
+    _(last_response.body['data']).must_be_nil
   end
 
   # Create Event

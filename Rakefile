@@ -3,14 +3,17 @@
 require 'rake/testtask'
 require_relative './require_app'
 
+task default: :spec
+
 desc 'Check Vulnerable Dependencies'
 task :audit do
   sh 'bundle audit check --update'
 end
 
-desc 'Ruby Test'
+desc 'Test all the specs'
 Rake::TestTask.new(:spec) do |t|
-  t.test_files = FileList['spec/*.rb']
+  t.pattern = 'spec/**/*_spec.rb'
+  t.warning = false
 end
 
 desc 'Check Style and Performance'

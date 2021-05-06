@@ -1,9 +1,6 @@
 # frozen_string_literal: true
 
-require_relative '../require_app'
 require_relative 'spec_helper'
-
-require_app
 
 describe 'Test CalendarCoordinator Web API - calendar' do
   include Rack::Test::Methods
@@ -43,6 +40,14 @@ describe 'Test CalendarCoordinator Web API - calendar' do
 
     result = JSON.parse(last_response.body)
     _(result['message']).must_equal 'Calendar not found'
+  end
+
+  it 'SECURITY: should prevent basic SQL injection targeting IDs' do
+    get 'api/v1/calendars/2%20or%20id%3E0'
+
+    # deliberately not reporting error -- don't give attacker information
+    _(last_response.status).must_equal 404
+    _(last_response.body['data']).must_be_nil
   end
 
   # Create calendar

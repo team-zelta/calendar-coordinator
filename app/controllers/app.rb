@@ -47,7 +47,7 @@ module CalendarCoordinator
               routing.post do
                 data = JSON.parse(routing.body.read)
 
-                calendar = Calendar.find(id: calendar_id)
+                calendar = Calendar.first(id: calendar_id)
                 event = calendar.add_event(data)
 
                 if event
@@ -57,8 +57,10 @@ module CalendarCoordinator
                   routing.halt 400, { message: 'Save Event failed' }.to_json
                 end
               rescue Sequel::MassAssignmentRestriction => e
+                API.logger.warn "MASS-ASSIGNMENT: #{data.keys}"
                 routing.halt 400, { message: "Illegal Attributes : #{e}" }.to_json
               rescue StandardError => e
+                API.logger.error "UNKOWN ERROR: #{e.message}"
                 routing.halt 500, { message: e.message }.to_json
               end
             end
@@ -66,7 +68,7 @@ module CalendarCoordinator
             # GET /api/v1/calendars/{id}
             routing.get do
               response.status = 200
-              calendar = Calendar.find(id: calendar_id)
+              calendar = Calendar.first(id: calendar_id)
               calendar ? calendar.to_json : raise('Calendar not found')
             rescue StandardError => e
               routing.halt 404, { message: e.message }.to_json
@@ -93,8 +95,10 @@ module CalendarCoordinator
               routing.halt 400, { message: 'Save Calendar failed' }.to_json
             end
           rescue Sequel::MassAssignmentRestriction => e
+            API.logger.warn "MASS-ASSIGNMENT: #{data.keys}"
             routing.halt 400, { message: "Illegal Attributes : #{e}" }.to_json
           rescue StandardError => e
+            API.logger.error "UNKOWN ERROR: #{e.message}"
             routing.halt 500, { message: e.message }.to_json
           end
         end

@@ -4,12 +4,9 @@ ENV['RACK_ENV'] = 'test'
 
 require 'minitest/autorun'
 require 'minitest/rg'
-require 'rack/test'
 require 'yaml'
 
-def app
-  CalendarCoordinator::API
-end
+require_relative 'test_load_all'
 
 # Delete database
 def wipe_database
