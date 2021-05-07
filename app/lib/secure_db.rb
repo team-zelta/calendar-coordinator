@@ -37,6 +37,6 @@ class SecureDB
 
     ciphertext = Base64.strict_decode64(ciphertext64)
     simple_box = RbNaCl::SimpleBox.from_secret_key(key)
-    simple_box.decrypt(ciphertext)
+    simple_box.decrypt(ciphertext).force_encoding(Encoding::UTF_8)
   end
 end
