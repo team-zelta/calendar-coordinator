@@ -3,7 +3,7 @@
 require 'base64'
 require_relative '../lib/key_stretch'
 
-module Credence
+module CalendarCoordinator
   # Password
   class Password
     extend KeyStretch
