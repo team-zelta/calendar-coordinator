@@ -8,6 +8,10 @@ All routes return JSON.
 
 - GET `/`: Root route shows if Web API is running.
 
+- GET `api/v1/accounts`: Get all accounts.
+- GET `api/v1/accounts/{id}`: Get account by id.
+- POST `api/v1/accounts`: Create account.
+
 - GET `api/v1/calendars`: Get all calendars.
 - GET `api/v1/calendars/{id}`: Get calendar by id.
 - POST `api/v1/calendars`: Create calendar.
