@@ -1,0 +1,8 @@
+---
+- username: 'Tony'
+  email: 'tony@gmail.com'
+  password: 'tony_password'
+
+- username: 'Joe'
+  email: 'joe@gmail.com'
+  password: 'joe_password'
