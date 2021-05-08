@@ -7,6 +7,8 @@ require_relative '../models/event'
 require_relative '../models/calendar'
 require_relative '../models/account'
 
+require_relative '../services/account_service'
+
 # Calendar
 module CalendarCoordinator
   # WebAPI controller
@@ -28,7 +30,7 @@ module CalendarCoordinator
           # GET /api/v1/accounts/{account_id}
           routing.get String do |account_id|
             response.status = 200
-            account = Account.find(id: account_id)
+            account = AccountService.get(id: account_id)
             account ? account.to_json : raise('Account not found')
           rescue StandardError => e
             routing.halt 404, { message: e.message }.to_json
@@ -37,7 +39,7 @@ module CalendarCoordinator
           # GET /api/v1/accounts
           routing.get do
             response.status = 200
-            JSON.pretty_generate(Account.all)
+            JSON.pretty_generate(AccountService.all)
           rescue StandardError => e
             routing.halt 500, { message: e.message }.to_json
           end
@@ -46,7 +48,7 @@ module CalendarCoordinator
           routing.post do
             data = JSON.parse(routing.body.read)
 
-            account = Account.create(data)
+            account = AccountService.create(data: data)
             if account
               response.status = 201
               { message: 'Account saved', account_id: account.id }.to_json
