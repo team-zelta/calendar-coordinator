@@ -7,7 +7,7 @@ Sequel.migration do
   change do
     create_table(:calendars) do
       uuid :id, primary_key: true
-      String :accounts_email, foreign_key: true, table: :accounts
+      uuid :accounts_id, foreign_key: true, table: :accounts
 
       String :summary_secure, null: false
       String :description_secure

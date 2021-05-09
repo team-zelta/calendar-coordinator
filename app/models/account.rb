@@ -8,8 +8,8 @@ require_relative './password'
 module CalendarCoordinator
   # Account Class
   class Account < Sequel::Model
-    one_to_many :owned_calendars, class: :'CalendarCoordinator::calendar',
-                                  key: :calendar_id
+    one_to_many :owned_calendars, class: :'CalendarCoordinator::Calendar',
+                                  key: :accounts_id
 
     plugin :association_dependencies, owned_calendars: :destroy
 
