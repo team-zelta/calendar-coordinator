@@ -8,6 +8,7 @@ require_relative '../models/calendar'
 require_relative '../models/account'
 
 require_relative '../services/account_service'
+require_relative '../services/calendar_service'
 
 # Calendar
 module CalendarCoordinator
@@ -32,8 +33,7 @@ module CalendarCoordinator
             routing.on 'calendars' do
               routing.post do
                 data = JSON.parse(routing.body.read)
-                account = AccountService.get(id: account_id)
-                calendar = account.add_owned_calendar(data)
+                calendar = CalendarService.create(account_id: account_id, data: data)
 
                 if calendar
                   response.status = 201
@@ -133,7 +133,7 @@ module CalendarCoordinator
             # GET /api/v1/calendars/{id}
             routing.get do
               response.status = 200
-              calendar = Calendar.first(id: calendar_id)
+              calendar = CalendarService.get(id: calendar_id)
               calendar ? calendar.to_json : raise('Calendar not found')
             rescue StandardError => e
               routing.halt 404, { message: e.message }.to_json
@@ -143,7 +143,7 @@ module CalendarCoordinator
           # GET /api/v1/calendars
           routing.get do
             response.status = 200
-            JSON.pretty_generate(Calendar.all)
+            JSON.pretty_generate(CalendarService.all)
           rescue StandardError => e
             routing.halt 500, { message: e.message }.to_json
           end
