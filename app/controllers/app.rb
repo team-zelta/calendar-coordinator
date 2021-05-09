@@ -9,6 +9,7 @@ require_relative '../models/account'
 
 require_relative '../services/account_service'
 require_relative '../services/calendar_service'
+require_relative '../services/event_service'
 
 # Calendar
 module CalendarCoordinator
@@ -94,7 +95,7 @@ module CalendarCoordinator
               # GET /api/v1/calendars/{calendar_id}/events/{event_id}
               routing.get String do |event_id|
                 response.status = 200
-                event = Event.where(calendar_id: calendar_id, id: event_id).first
+                event = EventService.get(calendar_id: calendar_id, event_id: event_id)
                 event ? event.to_json : raise('Event not found')
               rescue StandardError => e
                 routing.halt 404, { message: e.message }.to_json
@@ -103,7 +104,7 @@ module CalendarCoordinator
               # GET /api/v1/calendars/{calendar_id}/events
               routing.get do
                 response.status = 200
-                JSON.pretty_generate(Event.all)
+                JSON.pretty_generate(EventService.all)
               rescue StandardError => e
                 routing.halt 500, { message: e.message }.to_json
               end
@@ -112,8 +113,7 @@ module CalendarCoordinator
               routing.post do
                 data = JSON.parse(routing.body.read)
 
-                calendar = Calendar.first(id: calendar_id)
-                event = calendar.add_event(data)
+                event = EventService.create(calendar_id: calendar_id, data: data)
 
                 if event
                   response.status = 201
