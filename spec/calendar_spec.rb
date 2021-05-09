@@ -7,8 +7,13 @@ describe 'Test CalendarCoordinator Web API - calendar' do
 
   # Create database and import test data
   def create_database
+    DATA[:accounts].each do |account|
+      CalendarCoordinator::AccountService.create(data: account).save
+    end
+
+    account = CalendarCoordinator::AccountService.all.first
     DATA[:calendars].each do |calendar|
-      CalendarCoordinator::Calendar.create(calendar).save
+      account.add_owned_calendar(calendar)
     end
   end
 
@@ -53,9 +58,10 @@ describe 'Test CalendarCoordinator Web API - calendar' do
   # Create calendar
   it 'HAPPY: should be able to create calendar' do
     sample_calendar = DATA[:calendars][1]
+    account = CalendarCoordinator::AccountService.all.first
 
     req_header = { 'Content-Type' => 'application/json' }
-    post 'api/v1/calendars', sample_calendar.to_json, req_header
+    post "api/v1/accounts/#{account.id}/calendars", sample_calendar.to_json, req_header
 
     result = JSON.parse(last_response.body)
     _(last_response.status).must_equal 201
@@ -66,8 +72,10 @@ describe 'Test CalendarCoordinator Web API - calendar' do
     sample_calendar = DATA[:calendars][1].clone
     sample_calendar['id'] = '00000000-0000-0000-0000-000000000000'
 
+    account = CalendarCoordinator::AccountService.all.first
+
     req_header = { 'Content-Type' => 'application/json' }
-    post 'api/v1/calendars', sample_calendar.to_json, req_header
+    post "api/v1/accounts/#{account.id}/calendars", sample_calendar.to_json, req_header
 
     _(last_response.status).must_equal 400
   end

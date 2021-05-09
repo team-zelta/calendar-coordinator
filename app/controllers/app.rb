@@ -46,7 +46,7 @@ module CalendarCoordinator
                 routing.halt 400, { message: "Illegal Attributes : #{e}" }.to_json
               rescue StandardError => e
                 API.logger.error "UNKOWN ERROR: #{e.message}"
-                routing.halt 500, { message: e.full_message }.to_json
+                routing.halt 500, { message: e.message }.to_json
               end
             end
 
