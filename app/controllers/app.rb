@@ -8,6 +8,8 @@ require_relative '../models/calendar'
 require_relative '../models/account'
 
 require_relative '../services/account_service'
+require_relative '../services/calendar_service'
+require_relative '../services/event_service'
 
 # Calendar
 module CalendarCoordinator
@@ -27,13 +29,36 @@ module CalendarCoordinator
       @api_v1 = 'api/v1'
       routing.on @api_v1 do
         routing.on 'accounts' do
-          # GET /api/v1/accounts/{account_id}
-          routing.get String do |account_id|
-            response.status = 200
-            account = AccountService.get(id: account_id)
-            account ? account.to_json : raise('Account not found')
-          rescue StandardError => e
-            routing.halt 404, { message: e.message }.to_json
+          routing.on String do |account_id|
+            # POST /api/v1/accounts/{account_id}/calendars
+            routing.on 'calendars' do
+              routing.post do
+                data = JSON.parse(routing.body.read)
+                calendar = CalendarService.create(account_id: account_id, data: data)
+
+                if calendar
+                  response.status = 201
+                  { message: 'Calendar saved', calendar_id: calendar.id }.to_json
+                else
+                  routing.halt 400, { message: 'Save Calendar failed' }.to_json
+                end
+              rescue Sequel::MassAssignmentRestriction => e
+                API.logger.warn "MASS-ASSIGNMENT: #{data.keys}"
+                routing.halt 400, { message: "Illegal Attributes : #{e}" }.to_json
+              rescue StandardError => e
+                API.logger.error "UNKOWN ERROR: #{e.message}"
+                routing.halt 500, { message: e.message }.to_json
+              end
+            end
+
+            # GET /api/v1/accounts/{account_id}
+            routing.get do
+              response.status = 200
+              account = AccountService.get(id: account_id)
+              account ? account.to_json : raise('Account not found')
+            rescue StandardError => e
+              routing.halt 404, { message: e.message }.to_json
+            end
           end
 
           # GET /api/v1/accounts
@@ -70,7 +95,7 @@ module CalendarCoordinator
               # GET /api/v1/calendars/{calendar_id}/events/{event_id}
               routing.get String do |event_id|
                 response.status = 200
-                event = Event.where(calendar_id: calendar_id, id: event_id).first
+                event = EventService.get(calendar_id: calendar_id, event_id: event_id)
                 event ? event.to_json : raise('Event not found')
               rescue StandardError => e
                 routing.halt 404, { message: e.message }.to_json
@@ -79,7 +104,7 @@ module CalendarCoordinator
               # GET /api/v1/calendars/{calendar_id}/events
               routing.get do
                 response.status = 200
-                JSON.pretty_generate(Event.all)
+                JSON.pretty_generate(EventService.all)
               rescue StandardError => e
                 routing.halt 500, { message: e.message }.to_json
               end
@@ -88,8 +113,7 @@ module CalendarCoordinator
               routing.post do
                 data = JSON.parse(routing.body.read)
 
-                calendar = Calendar.first(id: calendar_id)
-                event = calendar.add_event(data)
+                event = EventService.create(calendar_id: calendar_id, data: data)
 
                 if event
                   response.status = 201
@@ -109,7 +133,7 @@ module CalendarCoordinator
             # GET /api/v1/calendars/{id}
             routing.get do
               response.status = 200
-              calendar = Calendar.first(id: calendar_id)
+              calendar = CalendarService.get(id: calendar_id)
               calendar ? calendar.to_json : raise('Calendar not found')
             rescue StandardError => e
               routing.halt 404, { message: e.message }.to_json
@@ -119,27 +143,8 @@ module CalendarCoordinator
           # GET /api/v1/calendars
           routing.get do
             response.status = 200
-            JSON.pretty_generate(Calendar.all)
+            JSON.pretty_generate(CalendarService.all)
           rescue StandardError => e
-            routing.halt 500, { message: e.message }.to_json
-          end
-
-          # POST /api/v1/calendars
-          routing.post do
-            data = JSON.parse(routing.body.read)
-
-            calendar = Calendar.create(data)
-            if calendar
-              response.status = 201
-              { message: 'Calendar saved', calendar_id: calendar.id }.to_json
-            else
-              routing.halt 400, { message: 'Save Calendar failed' }.to_json
-            end
-          rescue Sequel::MassAssignmentRestriction => e
-            API.logger.warn "MASS-ASSIGNMENT: #{data.keys}"
-            routing.halt 400, { message: "Illegal Attributes : #{e}" }.to_json
-          rescue StandardError => e
-            API.logger.error "UNKOWN ERROR: #{e.message}"
             routing.halt 500, { message: e.message }.to_json
           end
         end
