@@ -14,7 +14,7 @@ All routes return JSON.
 
 - GET `api/v1/calendars`: Get all calendars.
 - GET `api/v1/calendars/{id}`: Get calendar by id.
-- POST `api/v1/calendars`: Create calendar.
+- POST `api/v1/accounts/{account_id}/calendars`: Create calendar.
 
 - GET `api/v1/calendars/{calendar_id}/events`: Get all events by calendar id.
 - GET `api/v1/calendars/{calendar_id}/events/{event_id}`: Get event by calendar id and event id.
