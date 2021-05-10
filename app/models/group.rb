@@ -8,14 +8,12 @@ require_relative './password'
 module CalendarCoordinator
   # Group Class
   class Group < Sequel::Model
-    one_to_many :owned_accounts, class: :'CalendarCoordinator::Account',
-                                 key: :account_id
-    many_to_many :accounts, class: :'CalendarCoordinator::Account',
-                            join_table: :accounts_groups,
-                            left_key: :group_id, right_key: :account_id
+    many_to_many :owned_accounts, class: :'CalendarCoordinator::Account',
+                                  join_table: :accounts_groups,
+                                  left_key: :group_id, right_key: :account_id
 
     plugin :association_dependencies
-    add_association_dependencies accounts: :nullify
+    add_association_dependencies owned_accounts: :nullify
 
     # Auto set created_at & updated_at
     plugin :timestamps, update_on_create: true
