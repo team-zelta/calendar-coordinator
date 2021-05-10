@@ -9,12 +9,12 @@ module CalendarCoordinator
   # Account Class
   class Account < Sequel::Model
     one_to_many :owned_calendars, class: :'CalendarCoordinator::Calendar',
-                                  key: :accounts_id
+                                  key: :account_id
 
     one_to_many :belonged_group, class: :'CalendarCoordinator::Group',
-                                 key: :group_id
+                                 key: :account_id
     many_to_many :groups, class: :'CalendarCoordinator::Group',
-                          join_table: :groups_accounts,
+                          join_table: :accounts_groups,
                           left_key: :account_id, right_key: :group_id
 
     plugin :association_dependencies

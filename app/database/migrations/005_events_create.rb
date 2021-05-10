@@ -7,7 +7,7 @@ Sequel.migration do
   change do
     create_table(:events) do
       uuid :id, primary_key: true
-      foreign_key :calendar_id, table: :calendars
+      uuid :calendar_id, foreign_key: true, table: :calendars
 
       String :gid_secure
       String :status

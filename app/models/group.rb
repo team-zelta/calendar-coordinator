@@ -11,7 +11,7 @@ module CalendarCoordinator
     one_to_many :owned_accounts, class: :'CalendarCoordinator::Account',
                                  key: :account_id
     many_to_many :accounts, class: :'CalendarCoordinator::Account',
-                            join_table: :groups_accounts,
+                            join_table: :accounts_groups,
                             left_key: :group_id, right_key: :account_id
 
     plugin :association_dependencies

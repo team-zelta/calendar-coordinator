@@ -6,10 +6,12 @@ require 'json'
 require_relative '../models/event'
 require_relative '../models/calendar'
 require_relative '../models/account'
+require_relative '../models/group'
 
 require_relative '../services/account_service'
 require_relative '../services/calendar_service'
 require_relative '../services/event_service'
+require_relative '../services/group_service'
 
 # Calendar
 module CalendarCoordinator
@@ -28,6 +30,27 @@ module CalendarCoordinator
       # rubocop:disable Metrics/BlockLength
       @api_v1 = 'api/v1'
       routing.on @api_v1 do
+        routing.on 'groups' do
+          routing.get String do |group_id|
+            # GET /api/v1/groups/{group_id}
+            routing.get do
+              response.status = 200
+              group = GroupService.get(id: group_id)
+              group ? group.to_json : raise('Group not found')
+            rescue StandardError => e
+              routing.halt 404, { message: e.message }.to_json
+            end
+          end
+
+          # GET /api/v1/groups
+          routing.get do
+            response.status = 200
+            JSON.pretty_generate(GroupService.all)
+          rescue StandardError => e
+            routing.halt 500, { message: e.message }.to_json
+          end
+        end
+
         routing.on 'accounts' do
           routing.on String do |account_id|
             # POST /api/v1/accounts/{account_id}/calendars
@@ -41,6 +64,27 @@ module CalendarCoordinator
                   { message: 'Calendar saved', calendar_id: calendar.id }.to_json
                 else
                   routing.halt 400, { message: 'Save Calendar failed' }.to_json
+                end
+              rescue Sequel::MassAssignmentRestriction => e
+                API.logger.warn "MASS-ASSIGNMENT: #{data.keys}"
+                routing.halt 400, { message: "Illegal Attributes : #{e}" }.to_json
+              rescue StandardError => e
+                API.logger.error "UNKOWN ERROR: #{e.message}"
+                routing.halt 500, { message: e.message }.to_json
+              end
+            end
+
+            routing.on 'groups' do
+              # POST/api/v1/accounts/{account_id}/groups
+              routing.post do
+                data = JSON.parse(routing.body.read)
+
+                group = GroupService.create(account_id: account_id, data: data)
+                if group
+                  response.status = 201
+                  { message: 'Group saved', group_id: group.id }.to_json
+                else
+                  routing.halt 400, { message: 'Save Group failed' }.to_json
                 end
               rescue Sequel::MassAssignmentRestriction => e
                 API.logger.warn "MASS-ASSIGNMENT: #{data.keys}"
