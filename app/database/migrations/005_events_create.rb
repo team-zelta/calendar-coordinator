@@ -5,15 +5,23 @@ require 'securerandom'
 
 Sequel.migration do
   change do
-    create_table(:calendars) do
+    create_table(:events) do
       uuid :id, primary_key: true
-      uuid :accounts_id, foreign_key: true, table: :accounts
+      uuid :calendar_id, foreign_key: true, table: :calendars
 
+      String :gid_secure
+      String :status
       String :summary_secure, null: false
       String :description_secure
       String :location_secure
-      String :time_zone
-      String :access_role
+
+      DateTime :start_date
+      DateTime :start_date_time
+      String :start_time_zone
+
+      DateTime :end_date
+      DateTime :end_date_time
+      String :end_time_zone
 
       DateTime :created_at
       DateTime :updated_at
