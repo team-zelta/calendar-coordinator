@@ -11,7 +11,15 @@ module CalendarCoordinator
     one_to_many :owned_calendars, class: :'CalendarCoordinator::Calendar',
                                   key: :accounts_id
 
-    plugin :association_dependencies, owned_calendars: :destroy
+    one_to_many :belonged_group, class: :'CalendarCoordinator::Group',
+                                 key: :group_id
+    many_to_many :groups, class: :'CalendarCoordinator::Group',
+                          join_table: :groups_accounts,
+                          left_key: :account_id, right_key: :group_id
+
+    plugin :association_dependencies
+    add_association_dependencies owned_calendars: :destroy,
+                                 belonged_group: :destroy, groups: :nullfy
 
     # Auto set created_at & updated_at
     plugin :timestamps, update_on_create: true

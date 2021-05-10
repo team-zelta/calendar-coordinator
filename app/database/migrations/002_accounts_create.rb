@@ -6,6 +6,7 @@ Sequel.migration do
   change do
     create_table(:accounts) do
       uuid :id, primary_key: true
+      uuid :groups_id, foreign_key: true, table: :groups
 
       String :username, null: false
       String :email, null: false, unique: true
