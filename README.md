@@ -12,6 +12,10 @@ All routes return JSON.
 - GET `api/v1/accounts/{id}`: Get account by id.
 - POST `api/v1/accounts`: Create account.
 
+- GET `api/v1/groups`: Get all groups.
+- GET `api/v1/groups/{id}`: Get group by id.
+- POST `api/v1/accounts/{account_id}/groups`: Create group.
+
 - GET `api/v1/calendars`: Get all calendars.
 - GET `api/v1/calendars/{id}`: Get calendar by id.
 - POST `api/v1/accounts/{account_id}/calendars`: Create calendar.
