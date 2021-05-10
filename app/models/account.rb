@@ -19,7 +19,7 @@ module CalendarCoordinator
 
     plugin :association_dependencies
     add_association_dependencies owned_calendars: :destroy,
-                                 belonged_group: :destroy, groups: :nullfy
+                                 belonged_group: :destroy, groups: :nullify
 
     # Auto set created_at & updated_at
     plugin :timestamps, update_on_create: true
