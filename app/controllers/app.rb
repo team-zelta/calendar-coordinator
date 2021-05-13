@@ -52,6 +52,7 @@ module CalendarCoordinator
         end
 
         routing.on 'accounts' do
+          @account_route = "#{@api_v1}/accounts"
           routing.on String do |account_id|
             # POST /api/v1/accounts/{account_id}/calendars
             routing.on 'calendars' do
@@ -116,10 +117,10 @@ module CalendarCoordinator
           # POST /api/v1/accounts
           routing.post do
             data = JSON.parse(routing.body.read)
-
             account = AccountService.create(data: data)
             if account
               response.status = 201
+              response['Location'] = "#{@account_route}/#{account.id}"
               { message: 'Account saved', account_id: account.id }.to_json
             else
               routing.halt 400, { message: 'Save Account failed' }.to_json
