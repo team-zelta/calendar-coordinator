@@ -21,8 +21,8 @@ module CalendarCoordinator
     end
 
     # Get all Event
-    def self.all
-      Event.all
+    def self.all(calendar_id:)
+      Event.where(calendar_id: calendar_id).first
     end
 
     # Get list from google and insert into database
