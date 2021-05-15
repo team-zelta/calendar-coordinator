@@ -22,7 +22,7 @@ module CalendarCoordinator
 
     # Get all Event
     def self.all(calendar_id:)
-      Event.where(calendar_id: calendar_id).first
+      Event.where(calendar_id: calendar_id).all
     end
 
     # Get list from google and insert into database
