@@ -29,7 +29,7 @@ describe 'Test CalendarCoordinator Web API - event' do
     get "api/v1/calendars/#{calendar_id}/events"
 
     result = JSON.parse(last_response.body)
-    _(result.count).must_equal 1
+    _(result.count).must_equal 2
   end
 
   # Get event by id
