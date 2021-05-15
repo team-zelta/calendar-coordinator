@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require './config/environments'
-require './app/controllers/app'
+require './require_app'
+require_app
 
 run CalendarCoordinator::API.freeze.app

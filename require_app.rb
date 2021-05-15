@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-def require_app(folders = %w[lib models controllers])
+def require_app(folders = %w[lib models services controllers])
   app_list = Array(folders).map { |folder| "app/#{folder}" }
   full_list = ['config', app_list].flatten.join(',')
 
