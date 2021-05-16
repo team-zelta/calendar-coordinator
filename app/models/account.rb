@@ -28,7 +28,7 @@ module CalendarCoordinator
     plugin :uuid, field: :id
     plugin :whitelist_security
 
-    set_allowed_columns :username, :email, :password, :owner
+    set_allowed_columns :username, :email, :password
 
     def calendars
       owned_calendars
