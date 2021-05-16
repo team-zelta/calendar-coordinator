@@ -2,7 +2,6 @@
 
 require 'roda'
 require_relative './app'
-require_relative '../services/account_service'
 
 module CalendarCoordinator
   # API for accounts route
