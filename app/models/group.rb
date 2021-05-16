@@ -12,8 +12,7 @@ module CalendarCoordinator
                                   join_table: :accounts_groups,
                                   left_key: :group_id, right_key: :account_id
 
-    plugin :association_dependencies
-    add_association_dependencies owned_accounts: :nullify
+    plugin :association_dependencies, owned_accounts: :nullify
 
     # Auto set created_at & updated_at
     plugin :timestamps, update_on_create: true

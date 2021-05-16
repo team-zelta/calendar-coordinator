@@ -16,9 +16,8 @@ module CalendarCoordinator
                  join_table: :accounts_groups,
                  left_key: :account_id, right_key: :group_id
 
-    plugin :association_dependencies
-    add_association_dependencies owned_calendars: :destroy,
-                                 belonged_groups: :nullify
+    plugin :association_dependencies, owned_calendars: :destroy,
+                                      belonged_groups: :nullify
 
     # Auto set created_at & updated_at
     plugin :timestamps, update_on_create: true
