@@ -10,6 +10,8 @@ module CalendarCoordinator
   class Account < Sequel::Model
     one_to_many :owned_calendars, class: :'CalendarCoordinator::Calendar',
                                   key: :account_id
+    one_to_many :owned_groups, class: :'CalendarCoordinator::Group',
+                               key: :account_id
 
     many_to_many :belonged_groups,
                  class: :'CalendarCoordinator::Group',
@@ -17,6 +19,7 @@ module CalendarCoordinator
                  left_key: :account_id, right_key: :group_id
 
     plugin :association_dependencies, owned_calendars: :destroy,
+                                      owned_groups: :destroy,
                                       belonged_groups: :nullify
 
     # Auto set created_at & updated_at
@@ -25,7 +28,7 @@ module CalendarCoordinator
     plugin :uuid, field: :id
     plugin :whitelist_security
 
-    set_allowed_columns :username, :email, :password
+    set_allowed_columns :username, :email, :password, :owner
 
     def calendars
       owned_calendars

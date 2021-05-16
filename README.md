@@ -21,6 +21,7 @@ All routes return JSON.
 - GET `api/v1/groups`: Get all groups.
 - GET `api/v1/groups/{id}`: Get group by id.
 - POST `api/v1/accounts/{account_id}/groups`: Create group.
+- POST `api/v1/accounts/{account_id}/groups/join`: Join group.
 - GET `api/v1/groups/{id}/delete`: Delete group by id.
 <br/>
 
