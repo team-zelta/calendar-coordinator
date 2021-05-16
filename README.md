@@ -12,6 +12,8 @@ All routes return JSON.
 - GET `api/v1/accounts/{id}`: Get account by id.
 - POST `api/v1/accounts`: Create account.
 
+- POST `api/v1/auth/authenticate`: Authenticate account.
+
 - GET `api/v1/groups`: Get all groups.
 - GET `api/v1/groups/{id}`: Get group by id.
 - POST `api/v1/accounts/{account_id}/groups`: Create group.

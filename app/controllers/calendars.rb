@@ -2,8 +2,6 @@
 
 require 'roda'
 require_relative './app'
-require_relative '../services/calendar_service'
-require_relative '../services/event_service'
 
 module CalendarCoordinator
   # API for groups route
