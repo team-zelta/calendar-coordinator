@@ -48,6 +48,17 @@ module CalendarCoordinator
           end
         end
 
+        # GET /api/v1/accounts/{account_id}/delete
+        routing.is 'delete' do
+          routing.get do
+            response.status = 200
+            account = AccountService.delete(id: account_id)
+            account ? account.to_json : raise('Account not deleted')
+          rescue StandardError => e
+            routing.halt 404, { message: e.message }.to_json
+          end
+        end
+
         # GET /api/v1/accounts/{account_id}
         routing.get do
           response.status = 200

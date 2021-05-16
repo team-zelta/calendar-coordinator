@@ -24,5 +24,12 @@ module CalendarCoordinator
     def self.all
       Group.all
     end
+
+    # Delete Group by id
+    def self.delete(id:)
+      group = get(id: id)
+      puts group
+      group ? group.destroy : raise('Group not found')
+    end
   end
 end

@@ -25,6 +25,12 @@ module CalendarCoordinator
       Event.where(calendar_id: calendar_id).all
     end
 
+    # Delete Event by id
+    def self.delete(calendar_id:, event_id:)
+      event = get(calendar_id: calendar_id, event_id: event_id)
+      event ? event.destroy : raise('Event not found')
+    end
+
     # Get list from google and insert into database
     def self.list_from_google(calendar_id:) # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
       event_google = EventGoogle.list
