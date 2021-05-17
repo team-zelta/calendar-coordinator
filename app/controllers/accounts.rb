@@ -5,7 +5,7 @@ require_relative './app'
 
 module CalendarCoordinator
   # API for accounts route
-  class API < Roda
+  class API < Roda # rubocop:disable Metrics/ClassLength
     route('accounts') do |routing| # rubocop:disable Metrics/BlockLength
       routing.on String do |account_id| # rubocop:disable Metrics/BlockLength
         routing.on 'calendars' do
