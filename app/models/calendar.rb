@@ -7,11 +7,12 @@ require 'sequel'
 module CalendarCoordinator
   # Calendar Class
   class Calendar < Sequel::Model
-    # Enable primary key setter
-
     # Defind relationships between models
-    one_to_many :event
-    plugin :association_dependencies, event: :destroy
+    one_to_many :events
+    many_to_one :belonged_accounts, class: :'CalendarCoordinator::Account'
+
+    plugin :association_dependencies,
+           events: :destroy
 
     # Auto set created_at & updated_at
     plugin :timestamps

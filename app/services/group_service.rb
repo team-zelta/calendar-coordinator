@@ -7,12 +7,22 @@ require_relative './account_service'
 module CalendarCoordinator
   # Group Service
   class GroupService
+    include Common
+
     # Create Group
     def self.create(account_id:, data:)
       account = AccountService.get(id: account_id)
       raise('Account not found') unless account
 
-      account.add_belonged_group(data)
+      account.add_owned_group(data)
+    end
+
+    # Join Group
+    def self.join(account_id:, group:)
+      account = AccountService.get(id: account_id)
+      raise('Account not found') unless account
+
+      account.add_belonged_group(group)
     end
 
     # Get Group by id
@@ -23,6 +33,21 @@ module CalendarCoordinator
     # Get all Group
     def self.all
       Group.all
+    end
+
+    # Delete Group by id
+    def self.delete(id:)
+      group = get(id: id)
+      puts group
+      group ? group.destroy : raise('Group not found')
+    end
+
+    # Authenticate group
+    def self.authenticate(credentials)
+      group = Group.find(id: credentials[:group_id])
+      group.password?(credentials[:password]) ? group : raise
+    rescue StandardError
+      raise UnauthorizedError, credentials
     end
   end
 end

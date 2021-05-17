@@ -6,6 +6,8 @@ require_relative '../models/account'
 module CalendarCoordinator
   # Account Service
   class AccountService
+    include Common
+
     # Create Account
     def self.create(data:)
       Account.create(data)
@@ -19,6 +21,20 @@ module CalendarCoordinator
     # Get all Account
     def self.all
       Account.all
+    end
+
+    # Delete Account by id
+    def self.delete(id:)
+      account = get(id: id)
+      account ? account.destroy : raise('Account not found')
+    end
+
+    # Authenticate account
+    def self.authenticate(credentials)
+      account = Account.first(username: credentials[:username])
+      account.password?(credentials[:password]) ? account : raise
+    rescue StandardError
+      raise UnauthorizedError, credentials
     end
   end
 end

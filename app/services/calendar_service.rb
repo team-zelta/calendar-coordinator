@@ -22,5 +22,11 @@ module CalendarCoordinator
     def self.all
       Calendar.all
     end
+
+    # Delete Calendar by id
+    def self.delete(id:)
+      calendar = get(id: id)
+      calendar ? calendar.destroy : raise('Calendar not found')
+    end
   end
 end
