@@ -9,13 +9,26 @@ module CalendarCoordinator
     route('calendars') do |routing| # rubocop:disable Metrics/BlockLength
       routing.on String do |calendar_id| # rubocop:disable Metrics/BlockLength
         routing.on 'events' do # rubocop:disable Metrics/BlockLength
-          # GET /api/v1/calendars/{calendar_id}/events/{event_id}
-          routing.get String do |event_id|
-            response.status = 200
-            event = EventService.get(calendar_id: calendar_id, event_id: event_id)
-            event ? event.to_json : raise('Event not found')
-          rescue StandardError => e
-            routing.halt 404, { message: e.message }.to_json
+          routing.on String do |event_id|
+            # GET /api/v1/calendars/{calendar_id}/events/{event_id}/delete
+            routing.is 'delete' do
+              routing.get do
+                response.status = 200
+                event = EventService.delete(calendar_id: calendar_id, event_id: event_id)
+                event ? event.to_json : raise('Event not deleted')
+              rescue StandardError => e
+                routing.halt 404, { message: e.message }.to_json
+              end
+            end
+
+            # GET /api/v1/calendars/{calendar_id}/events/{event_id}
+            routing.get do
+              response.status = 200
+              event = EventService.get(calendar_id: calendar_id, event_id: event_id)
+              event ? event.to_json : raise('Event not found')
+            rescue StandardError => e
+              routing.halt 404, { message: e.message }.to_json
+            end
           end
 
           # GET /api/v1/calendars/{calendar_id}/events
@@ -24,7 +37,7 @@ module CalendarCoordinator
             events = EventService.all(calendar_id: calendar_id)
             JSON.pretty_generate(events)
           rescue StandardError => e
-            routing.halt 500, { message: e.full_message }.to_json
+            routing.halt 500, { message: e.message }.to_json
           end
 
           # POST /api/v1/calendars/{calendar_id}/events
@@ -45,6 +58,18 @@ module CalendarCoordinator
             routing.halt 500, { message: e.message }.to_json
           end
         end
+
+        # GET /api/v1/calendars/{id}/delete
+        routing.is 'delete' do
+          routing.get do
+            response.status = 200
+            calendar = CalendarService.delete(id: calendar_id)
+            calendar ? calendar.to_json : raise('Calendar not deleted')
+          rescue StandardError => e
+            routing.halt 404, { message: e.message }.to_json
+          end
+        end
+
         # GET /api/v1/calendars/{id}
         routing.get do
           response.status = 200

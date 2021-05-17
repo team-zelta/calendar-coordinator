@@ -7,14 +7,8 @@ require 'sequel'
 module CalendarCoordinator
   # Event Entity
   class Event < Sequel::Model
-    # Enable primary key setter
-    unrestrict_primary_key
-
-    # Defind relationships between models
     many_to_one :calendar
-    plugin :association_dependencies, calendar: :destroy
 
-    # Auto set created_at & updated_at
     plugin :timestamps
 
     plugin :uuid, field: :id

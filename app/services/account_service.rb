@@ -23,6 +23,12 @@ module CalendarCoordinator
       Account.all
     end
 
+    # Delete Account by id
+    def self.delete(id:)
+      account = get(id: id)
+      account ? account.destroy : raise('Account not found')
+    end
+
     # Authenticate account
     def self.authenticate(credentials)
       account = Account.first(username: credentials[:username])
