@@ -1,0 +1,10 @@
+---
+- email: 'tony@gmail.com'
+  groups:
+    - groupname: 'group1'
+      password: 'group1_password'
+
+- email: 'joe@gmail.com'
+  groups:
+    - groupname: 'group2'
+      password: 'group2_password'

@@ -1,11 +1,11 @@
 ---
-- summary: 'Project Meeting'
+- summary: 'Tony Calendar'
   description: 'Discuss the progress of the project.'
   location: 'NTHU'
   time_zone: 'Asia/Taipei'
   access_role: ''
 
-- summary: 'Project Meeting'
+- summary: 'Joe Calendar'
   description: 'Discuss the progress of the project.'
   location: 'NTHU'
   time_zone: 'Asia/Taipei'
