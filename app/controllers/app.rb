@@ -10,8 +10,14 @@ module CalendarCoordinator
     plugin :halt
     plugin :multi_route
 
+    def secure_request?(routing)
+      routing.scheme.casecmp(API.config.SECURE_SCHEME).zero?
+    end
+
     route do |routing|
       response['Content-Type'] = 'application/json'
+      secure_request?(routing) ||
+        routing.halt(403, { message: 'TLS/SSL Required' }.to_json)
 
       routing.root do
         response.status = 200
