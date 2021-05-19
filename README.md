@@ -25,7 +25,7 @@ All routes return JSON.
 - POST `api/v1/accounts/{account_id}/groups/join`: Join group.
 - GET `api/v1/groups/{id}/delete`: Delete group by id.
 - POST `api/v1/groups/add-calendar`: Add calendar to group.
-- GET `/api/v1/groups/{{group_id}}/calendars`: Get group owned calendars.
+- GET `/api/v1/groups/{group_id}/calendars`: Get group owned calendars.
 - Get `GET /api/v1/groups/{group_id}/common-busy-time`: Get group common busy time.
 
 ### Calendar
