@@ -28,5 +28,10 @@ module CalendarCoordinator
       calendar = get(id: id)
       calendar ? calendar.destroy : raise('Calendar not found')
     end
+
+    # Get owned Events
+    def self.owned_events(id:)
+      get(id: id).events
+    end
   end
 end

@@ -52,10 +52,16 @@ module CalendarCoordinator
 
     # Add Calendar to Group
     def self.add_calendar(calendar_id:, group_id:)
-      group = GroupService.get(id: group_id)
+      group = get(id: group_id)
       calendar = CalendarService.get(id: calendar_id)
 
       group.add_owned_calendar(calendar)
+    end
+
+    # Get Owend Calendars
+    def self.owned_calendars(group_id:)
+      group = get(id: group_id)
+      group.owned_calendars
     end
   end
 end
