@@ -31,6 +31,8 @@ All routes return JSON.
 - GET `api/v1/calendars/{id}/delete`: Delete calendar by id.
 <br/>
 
+- POST `api/v1/groups/add-calendar`: Add calendar to group.
+
 - GET `api/v1/calendars/{calendar_id}/events`: Get all events by calendar id.
 - GET `api/v1/calendars/{calendar_id}/events/{event_id}`: Get event by calendar id and event id.
 - POST `api/v1/calendars/{calendar_id}/events`: Create event.

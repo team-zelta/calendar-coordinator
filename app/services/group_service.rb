@@ -49,5 +49,13 @@ module CalendarCoordinator
     rescue StandardError
       raise UnauthorizedError, credentials
     end
+
+    # Add Calendar to Group
+    def self.add_calendar(calendar_id:, group_id:)
+      group = GroupService.get(id: group_id)
+      calendar = CalendarService.get(id: calendar_id)
+
+      group.add_owned_calendar(calendar)
+    end
   end
 end

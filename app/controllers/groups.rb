@@ -6,7 +6,27 @@ require_relative './app'
 module CalendarCoordinator
   # API for groups route
   class API < Roda
-    route('groups') do |routing|
+    route('groups') do |routing| # rubocop:disable Metrics/BlockLength
+      # POST /api/v1/groups/add-calendar
+      routing.is 'add-calendar' do
+        routing.post do
+          data = JSON.parse(routing.body.read)
+          calendar = GroupService.add_calendar(calendar_id: data['calendar_id'], group_id: data['group_id'])
+          if calendar
+            response.status = 201
+            { message: 'Add calendar to group success', calendar_id: calendar.id }.to_json
+          else
+            routing.halt 400, { message: 'Add calendar to group failed' }.to_json
+          end
+        rescue Sequel::MassAssignmentRestriction => e
+          API.logger.warn "MASS-ASSIGNMENT: #{data.keys}"
+          routing.halt 400, { message: "Illegal Attributes : #{e}" }.to_json
+        rescue StandardError => e
+          API.logger.error "UNKOWN ERROR: #{e.message}"
+          routing.halt 500, { message: e.full_message }.to_json
+        end
+      end
+
       routing.on String do |group_id|
         # GET /api/v1/groups/{group_id}/delete
         routing.is 'delete' do
