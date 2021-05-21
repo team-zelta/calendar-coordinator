@@ -17,6 +17,8 @@ jobs:
   Quality-Check:
 
     runs-on: ubuntu-latest
+    env:
+      BUNDLE_WITHOUT: production
     strategy:
       matrix:
         ruby-version: ['3.0']
