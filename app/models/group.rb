@@ -43,6 +43,7 @@ module CalendarCoordinator
       JSON(
         {
           id: id,
+          account_id: account_id,
           groupname: groupname
         },
         options

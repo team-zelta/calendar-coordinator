@@ -54,6 +54,7 @@ module CalendarCoordinator
       JSON(
         {
           id: id,
+          calendar_id: calendar_id,
           gid: gid,
           status: status,
           summary: summary,
