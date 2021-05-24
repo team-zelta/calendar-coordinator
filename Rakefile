@@ -46,7 +46,7 @@ namespace :db do
 
   desc 'Delete table'
   task :delete do
-    app.DB[:events].deleteap
+    app.DB[:events].delete
     app.DB[:calendars].delete
     app.DB[:accounts_groups].delete
     app.DB[:groups].delete
