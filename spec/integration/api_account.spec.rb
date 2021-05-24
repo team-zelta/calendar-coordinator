@@ -12,7 +12,7 @@ describe 'Test Account Handling' do
   describe 'Account information' do
     it 'HAPPY: should be able to get details of a single account' do
       account_data = DATA[:accounts][1]
-      account = CalendarCoordinator::Account.create(account_data)
+      account = CalendarCoordinator::AccountService.create(data: account_data)
 
       get "/api/v1/accounts/#{account.id}"
       _(last_response.status).must_equal 200

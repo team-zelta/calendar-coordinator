@@ -4,9 +4,9 @@ Sequel.seed(:development) do
   def run
     puts 'Seeding accounts, groups, calenders, events'
     create_accounts
-    create_owned_calendars
     create_owned_groups
     add_belonged_groups
+    create_owned_calendars
     add_calendar_evnets
   end
 end
@@ -26,18 +26,6 @@ def create_accounts
   end
 end
 
-def create_owned_calendars
-  OWNER_CALENDAR_INFO.each do |owner|
-    account = CalendarCoordinator::Account.first(username: owner['username'])
-    owner['summary'].each do |summary|
-      calendar_data = CALENDAR_INFO.find { |calendar| calendar['summary'] == summary }
-      CalendarCoordinator::CalendarService.create(
-        account_id: account.id, data: calendar_data
-      )
-    end
-  end
-end
-
 def create_owned_groups
   OWNER_GROUP_INFO.each do |owner_group_info|
     account = CalendarCoordinator::Account.first(email: owner_group_info['email'])
@@ -52,6 +40,18 @@ def add_belonged_groups
     account = CalendarCoordinator::Account.first(email: member_group_info['email'])
     group = CalendarCoordinator::Group.first(groupname: member_group_info['group_name'])
     account.add_belonged_group(group)
+  end
+end
+
+def create_owned_calendars
+  OWNER_CALENDAR_INFO.each do |owner|
+    account = CalendarCoordinator::Account.first(username: owner['username'])
+    owner['summary'].each do |summary|
+      calendar_data = CALENDAR_INFO.find { |calendar| calendar['summary'] == summary }
+      CalendarCoordinator::CalendarService.create(
+        account_id: account.id, data: calendar_data
+      )
+    end
   end
 end
 

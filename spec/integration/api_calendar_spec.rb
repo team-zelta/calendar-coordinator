@@ -11,7 +11,7 @@ describe 'Test CalendarCoordinator Web API - calendar' do
       CalendarCoordinator::AccountService.create(data: account).save
     end
 
-    account = CalendarCoordinator::AccountService.all.first
+    account = CalendarCoordinator::Account.first
     DATA[:calendars].each do |calendar|
       account.add_owned_calendar(calendar)
     end
@@ -37,7 +37,7 @@ describe 'Test CalendarCoordinator Web API - calendar' do
     get "api/v1/calendars/#{id}"
 
     result = JSON.parse(last_response.body)
-    _(result['summary']).must_equal 'Project Meeting'
+    _(result['summary']).must_equal 'Tony Calendar'
   end
 
   it 'SAD: should not be able to get calendar if unknown calendar requested' do
@@ -58,7 +58,7 @@ describe 'Test CalendarCoordinator Web API - calendar' do
   # Create calendar
   it 'HAPPY: should be able to create calendar' do
     sample_calendar = DATA[:calendars][1]
-    account = CalendarCoordinator::AccountService.all.first
+    account = CalendarCoordinator::Account.first
 
     req_header = { 'Content-Type' => 'application/json' }
     post "api/v1/accounts/#{account.id}/calendars", sample_calendar.to_json, req_header
@@ -72,7 +72,7 @@ describe 'Test CalendarCoordinator Web API - calendar' do
     sample_calendar = DATA[:calendars][1].clone
     sample_calendar['id'] = '00000000-0000-0000-0000-000000000000'
 
-    account = CalendarCoordinator::AccountService.all.first
+    account = CalendarCoordinator::Account.first
 
     req_header = { 'Content-Type' => 'application/json' }
     post "api/v1/accounts/#{account.id}/calendars", sample_calendar.to_json, req_header

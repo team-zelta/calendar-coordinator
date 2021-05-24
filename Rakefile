@@ -23,7 +23,7 @@ end
 
 desc 'Run application console (pry)'
 task console: :print_env do
-  sh 'pry -r ./require_app'
+  sh 'pry -r ./require_app.rb'
 end
 
 desc 'Print the environment'
@@ -46,8 +46,11 @@ namespace :db do
 
   desc 'Delete table'
   task :delete do
-    app.DB[:events].delete
+    app.DB[:events].deleteap
     app.DB[:calendars].delete
+    app.DB[:accounts_groups].delete
+    app.DB[:groups].delete
+    app.DB[:accounts].delete
   end
 
   desc 'Delete dev or test database file'
