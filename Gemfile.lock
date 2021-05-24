@@ -70,6 +70,8 @@ GEM
       rubocop-ast (>= 0.4.0)
     ruby-progressbar (1.11.0)
     sequel (5.43.0)
+    sequel-seed (1.1.2)
+      sequel (>= 4.49.0)
     solargraph (0.40.4)
       backport (~> 1.1)
       benchmark
@@ -113,6 +115,7 @@ DEPENDENCIES
   rubocop
   rubocop-performance
   sequel
+  sequel-seed
   solargraph
   sqlite3
 

@@ -56,6 +56,8 @@ build-iPhoneSimulator/
 # .rubocop-https?--*
 
 app/database/store/*
-config/secrets.yml
+
+# To allow testing on github for development, we temporarily add secrets.yml to our git
+# config/secrets.yml
 
 .bundle/

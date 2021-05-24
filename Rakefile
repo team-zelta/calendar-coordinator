@@ -23,7 +23,7 @@ end
 
 desc 'Run application console (pry)'
 task console: :print_env do
-  sh 'pry -r ./require_app'
+  sh 'pry -r ./require_app.rb'
 end
 
 desc 'Print the environment'
@@ -48,6 +48,9 @@ namespace :db do
   task :delete do
     app.DB[:events].delete
     app.DB[:calendars].delete
+    app.DB[:accounts_groups].delete
+    app.DB[:groups].delete
+    app.DB[:accounts].delete
   end
 
   desc 'Delete dev or test database file'
@@ -61,6 +64,26 @@ namespace :db do
     FileUtils.rm(db_filename)
     puts "Deleted #{db_filename}"
   end
+
+  task :load_models do
+    require_app(%w[lib models services])
+  end
+
+  task reset_seeds: [:load_models] do
+    app.DB[:schema_seeds].delete if app.DB.tables.include?(:schema_seeds)
+    CalendarCoordinator::Account.dataset.destroy
+  end
+
+  desc 'Seeds the development database'
+  task seed: [:load_models] do
+    require 'sequel/extensions/seed'
+    Sequel::Seed.setup(:development)
+    Sequel.extension :seed
+    Sequel::Seeder.apply(app.DB, 'app/database/seeds')
+  end
+
+  desc 'Delete all data and reseed'
+  task reseed: %i[reset_seeds seed]
 end
 
 namespace :newkey do
