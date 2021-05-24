@@ -96,7 +96,7 @@ describe 'Test CalendarCoordinator Web API - group' do
       CalendarCoordinator::AccountService.create(data: account)
     end
     account_id = CalendarCoordinator::Account.first.id
-    group = DATA[:owners_groups][0]['groups'][0]
+    group = DATA[:owners_groups][0].clone['groups'][0]
     group['id'] = '00000000-0000-0000-0000-000000000000'
 
     req_header = { 'Content-Type' => 'application/json' }
