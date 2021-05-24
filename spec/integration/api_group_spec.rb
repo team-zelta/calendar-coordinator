@@ -21,7 +21,7 @@ describe 'Test CalendarCoordinator Web API - group' do
   end
 
   before do
-    @clean_result = wipe_database
+    wipe_database
   end
 
   # Get all groups
@@ -35,7 +35,6 @@ describe 'Test CalendarCoordinator Web API - group' do
 
   # Get group by id
   it 'HAPPY: should be able to get group by id' do
-    puts 'wait for database' while @clean_result.zero?
     create_database
     group_id = CalendarCoordinator::Group.first.id
 
@@ -46,7 +45,6 @@ describe 'Test CalendarCoordinator Web API - group' do
   end
 
   it 'SAD: should not be able to get group by id due to group not exist' do
-    puts 'wait for database' while @clean_result.zero?
     create_database
     group_id = '00000000-0000-0000-0000-000000000000'
     get "api/v1/groups/#{group_id}"
@@ -56,7 +54,6 @@ describe 'Test CalendarCoordinator Web API - group' do
   end
 
   it 'SAD: should return error if unknown group requested' do
-    puts 'wait for database' while @clean_result.zero?
     create_database
     get 'api/v1/groups/foo'
 
@@ -64,7 +61,6 @@ describe 'Test CalendarCoordinator Web API - group' do
   end
 
   it 'SECURITY: should prevent basic SQL injection targeting IDs' do
-    puts 'wait for database' while @clean_result.zero?
     create_database
     get 'api/v1/groups/2%20or%20id%3E0'
 
@@ -75,12 +71,11 @@ describe 'Test CalendarCoordinator Web API - group' do
 
   # Create group
   it 'HAPPY: should be able to create group' do
-    puts 'wait for database' while @clean_result.zero?
     DATA[:accounts].each do |account|
       CalendarCoordinator::AccountService.create(data: account)
     end
     account_id = CalendarCoordinator::Account.first.id
-    group = DATA[:owners_groups][0]['groups'][0]
+    group = DATA[:owners_groups].clone[0]['groups'][0]
 
     req_header = { 'Content-Type' => 'application/json' }
     post "api/v1/accounts/#{account_id}/groups", group.to_json, req_header
@@ -91,16 +86,15 @@ describe 'Test CalendarCoordinator Web API - group' do
   end
 
   it 'SECURITY: should not be able to create group with mass assignment' do
-    puts 'wait for database' while @clean_result.zero?
     DATA[:accounts].each do |account|
       CalendarCoordinator::AccountService.create(data: account)
     end
     account_id = CalendarCoordinator::Account.first.id
-    group = DATA[:owners_groups][0]['groups'][0]
-    group['id'] = '00000000-0000-0000-0000-000000000000'
+    cloned_group = DATA[:owners_groups][0]['groups'][0].clone
+    cloned_group['id'] = '00000000-0000-0000-0000-000000000000'
 
     req_header = { 'Content-Type' => 'application/json' }
-    post "api/v1/accounts/#{account_id}/groups", group.to_json, req_header
+    post "api/v1/accounts/#{account_id}/groups", cloned_group.to_json, req_header
 
     _(last_response.status).must_equal 400
   end
