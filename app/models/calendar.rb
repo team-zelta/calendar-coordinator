@@ -11,8 +11,13 @@ module CalendarCoordinator
     one_to_many :events
     many_to_one :belonged_accounts, class: :'CalendarCoordinator::Account'
 
-    plugin :association_dependencies,
-           events: :destroy
+    many_to_many :belonged_groups,
+                 class: :'CalendarCoordinator::Group',
+                 join_table: :calendars_groups,
+                 left_key: :calendar_id, right_key: :group_id
+
+    plugin :association_dependencies, events: :destroy,
+                                      belonged_groups: :nullify
 
     # Auto set created_at & updated_at
     plugin :timestamps
@@ -50,6 +55,7 @@ module CalendarCoordinator
       JSON(
         {
           id: id,
+          account_id: account_id,
           summary: summary,
           description: description,
           location: location,

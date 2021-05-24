@@ -12,7 +12,11 @@ module CalendarCoordinator
                                   join_table: :accounts_groups,
                                   left_key: :group_id, right_key: :account_id
 
-    plugin :association_dependencies, owned_accounts: :nullify
+    many_to_many :owned_calendars, class: :'CalendarCoordinator::Calendar',
+                                   join_table: :calendars_groups,
+                                   left_key: :group_id, right_key: :calendar_id
+
+    plugin :association_dependencies, owned_accounts: :nullify, owned_calendars: :nullify
 
     # Auto set created_at & updated_at
     plugin :timestamps, update_on_create: true
@@ -39,6 +43,7 @@ module CalendarCoordinator
       JSON(
         {
           id: id,
+          account_id: account_id,
           groupname: groupname
         },
         options
