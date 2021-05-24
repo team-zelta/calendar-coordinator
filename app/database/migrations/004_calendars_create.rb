@@ -9,6 +9,7 @@ Sequel.migration do
       uuid :id, primary_key: true
       uuid :account_id, foreign_key: true, table: :accounts
 
+      String :gid_secure, unique: true
       String :summary_secure, null: false
       String :description_secure
       String :location_secure
