@@ -20,7 +20,7 @@ module CalendarCoordinator
               routing.halt 400, { message: 'Save Calendar failed' }.to_json
             end
           rescue Sequel::MassAssignmentRestriction => e
-            API.logger.warn "MASS-ASSIGNMENT: #{data.keys}"
+            API.logger.warn "MASS-ASSIGNMENT: #{data[0].keys}"
             routing.halt 400, { message: "Illegal Attributes : #{e}" }.to_json
           rescue StandardError => e
             API.logger.error "UNKOWN ERROR: #{e.message}"
