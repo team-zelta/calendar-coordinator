@@ -70,6 +70,26 @@ module CalendarCoordinator
           end
         end
 
+        # POST /api/v1/calendars/{id}/update
+        routing.is 'update' do
+          routing.post do
+            data = JSON.parse(routing.body.read)
+            calendar = CalendarService.update(id: calendar_id, data: data)
+            if calendar
+              response.status = 201
+              { message: 'Calendar updated', calendar_id: calendar_id }.to_json
+            else
+              routing.halt 400, { message: 'Update Calendar failed' }.to_json
+            end
+          rescue Sequel::MassAssignmentRestriction => e
+            API.logger.warn "MASS-ASSIGNMENT: #{data.keys}"
+            routing.halt 400, { message: "Illegal Attributes : #{e}" }.to_json
+          rescue StandardError => e
+            API.logger.error "UNKOWN ERROR: #{e.full_message}"
+            routing.halt 500, { message: e.full_message }.to_json
+          end
+        end
+
         # GET /api/v1/calendars/{id}
         routing.get do
           response.status = 200
@@ -79,6 +99,7 @@ module CalendarCoordinator
           routing.halt 404, { message: e.message }.to_json
         end
       end
+
       # GET /api/v1/calendars
       routing.get do
         response.status = 200

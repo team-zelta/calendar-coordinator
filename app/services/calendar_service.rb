@@ -8,9 +8,11 @@ module CalendarCoordinator
   # Calendar Service
   class CalendarService
     # Create Calendar
-    def self.create(account_id:, data:)
+    def self.create(account_id:, calendars:)
       account = AccountService.get(id: account_id)
-      account.add_owned_calendar(data)
+      calendars.each do |calendar|
+        account.add_owned_calendar(calendar)
+      end
     end
 
     # Get Calendar by id
@@ -32,6 +34,11 @@ module CalendarCoordinator
     # Get owned Events
     def self.owned_events(id:)
       get(id: id).events
+    end
+
+    # Update Calendar
+    def self.update(id:, data:)
+      Calendar.where(id: id).each { |calendar| calendar.update(data) }
     end
   end
 end

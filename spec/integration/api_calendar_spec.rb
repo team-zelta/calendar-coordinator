@@ -61,7 +61,7 @@ describe 'Test CalendarCoordinator Web API - calendar' do
     account = CalendarCoordinator::Account.first
 
     req_header = { 'Content-Type' => 'application/json' }
-    post "api/v1/accounts/#{account.id}/calendars", sample_calendar.to_json, req_header
+    post "api/v1/accounts/#{account.id}/calendars", [sample_calendar].to_json, req_header
 
     result = JSON.parse(last_response.body)
     _(last_response.status).must_equal 201
@@ -75,7 +75,7 @@ describe 'Test CalendarCoordinator Web API - calendar' do
     account = CalendarCoordinator::Account.first
 
     req_header = { 'Content-Type' => 'application/json' }
-    post "api/v1/accounts/#{account.id}/calendars", sample_calendar.to_json, req_header
+    post "api/v1/accounts/#{account.id}/calendars", [sample_calendar].to_json, req_header
 
     _(last_response.status).must_equal 400
   end

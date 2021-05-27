@@ -79,7 +79,6 @@ module CalendarCoordinator
 
       # GET /api/v1/groups
       routing.get do
-        puts '12342343'
         response.status = 200
         JSON.pretty_generate(GroupService.all)
       rescue StandardError => e
