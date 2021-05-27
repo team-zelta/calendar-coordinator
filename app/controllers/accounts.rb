@@ -12,10 +12,10 @@ module CalendarCoordinator
           # POST /api/v1/accounts/{account_id}/calendars
           routing.post do
             data = JSON.parse(routing.body.read)
-            calendar = CalendarService.create(account_id: account_id, data: data)
+            calendar = CalendarService.create(account_id: account_id, calendars: data)
             if calendar
               response.status = 201
-              { message: 'Calendar saved', calendar_id: calendar.id }.to_json
+              { message: 'Calendar saved' }.to_json
             else
               routing.halt 400, { message: 'Save Calendar failed' }.to_json
             end
