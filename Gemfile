@@ -8,6 +8,9 @@ gem 'json'
 gem 'puma', '~>5'
 gem 'roda', '~>3'
 
+# Communication
+gem 'http'
+
 # Performance
 gem 'rubocop-performance'
 

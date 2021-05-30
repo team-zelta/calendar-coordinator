@@ -36,5 +36,38 @@ module CalendarCoordinator
     rescue StandardError
       raise UnauthorizedError, credentials
     end
+
+    # Account registration verify
+    def self.register_verification(registration) # rubocop:disable Metrics/MethodLength
+      user_avaliable = Account.first(username: registration[:username]).nil?
+      raise(MailService::InvalidRegistration, 'Username exists') unless user_avaliable
+
+      email_avaliable = Account.first(email: registration[:email]).nil?
+      raise(MailService::InvalidRegistration, 'Email exists') unless email_avaliable
+
+      html_email = <<~END_EMAIL
+        <H1>ZetaCal App Registration Received</H1>
+        <p>Please <a href=\"#{registration[:verification_url]}\">click here</a>
+        to validate your email.
+        You will be asked to set a password to activate your account.</p>
+      END_EMAIL
+
+      text_email = <<~END_EMAIL
+        ZetaCal Registration Received\n\n
+        Please use the following url to validate your email:\n
+        #{registration[:verification_url]}\n\n
+        You will be asked to set a password to activate your account.
+      END_EMAIL
+
+      puts "html_email = #{html_email}"
+
+      mail_form = MailService.mail_form(from: 'noreply@zeta-cal.com',
+                                        to: registration[:email],
+                                        subject: 'ZetaCal Registration Verification',
+                                        text: text_email,
+                                        html: html_email)
+
+      MailService.send(mail_form: mail_form)
+    end
   end
 end
