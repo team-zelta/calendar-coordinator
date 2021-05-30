@@ -1,11 +1,14 @@
 # frozen_string_literal: true
 
+require 'roda'
+require_relative './app'
+
 module CalendarCoordinator
   # API for accounts route
   class API < Roda
     include Common
 
-    route('auth') do |routing|
+    route('auth') do |routing| # rubocop:disable Metrics/BlockLength
       routing.is 'authenticate' do
         # POST /api/v1/auth/authenticate
         routing.post do
@@ -16,6 +19,24 @@ module CalendarCoordinator
         rescue UnauthorizedError => e
           puts [e.class, e.message].join ': '
           routing.halt '403', { message: 'Invalid credentials' }.to_json
+        end
+      end
+
+      routing.is 'register' do
+        # POST /api/v1/auth/register
+        routing.post do
+          regisration_data = JsonRequestBody.parse_symbolize(request.body.read)
+
+          AccountService.register_verification(regisration_data)
+          response.status = 202
+          { message: 'Verfication email sent' }.to_json
+        rescue MailService::InvalidRegistration => e
+          puts e.full_message
+          routing.halt 400, { message: e.message }.to_json
+        rescue StandardError => e
+          puts "ERROR VERIFYING REGISTRATION: #{e.inspect}"
+          puts e.full_message
+          routing.halt 500
         end
       end
     end
