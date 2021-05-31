@@ -42,7 +42,8 @@ jobs:
            bundle exec rake audit
 
     - name: Run Tests
-      run: bundle exec rake db:migrate RACK_ENV=test 
+      run: echo $DATABASE_URL
+           bundle exec rake db:migrate RACK_ENV=test 
            bundle exec rake spec
     
     - name: Check Style and Performance
