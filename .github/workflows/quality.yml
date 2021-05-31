@@ -20,6 +20,7 @@ jobs:
       DATABASE_URL: ${{secrets.TEST_DATABASE_URL}}
       DB_KEY: ${{secrets.TEST_DB_KEY}}
       SECURE_SCHEME: ${{secrets.TEST_SECURE_SCHEME}}
+      MSG_KEY: ${{secrets.TEST_MSG_KEY}}
     strategy:
       matrix:
         ruby-version: ['3.0.1']
