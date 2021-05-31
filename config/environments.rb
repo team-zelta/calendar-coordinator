@@ -4,7 +4,7 @@ require 'roda'
 require 'figaro'
 require 'logger'
 require 'sequel'
-require './app/lib/secure_db'
+require_app('lib')
 
 # CalendarCoordinator
 module CalendarCoordinator
@@ -31,6 +31,11 @@ module CalendarCoordinator
     configure :development, :test do
       require 'pry'
       logger.level = Logger::ERROR
+    end
+
+    configure do
+      SecureDB.setup(ENV.delete('DB_KEY'))
+      AuthToken.setup(ENV.delete('MSG_KEY'))
     end
   end
 end

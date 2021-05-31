@@ -32,9 +32,15 @@ module CalendarCoordinator
     # Authenticate account
     def self.authenticate(credentials)
       account = Account.first(username: credentials[:username])
-      account.password?(credentials[:password]) ? account : raise
-    rescue StandardError
-      raise UnauthorizedError, credentials
+      account.password?(credentials[:password]) ? account : raise(UnauthorizedError, credentials)
+
+      {
+        type: 'authenticated_account',
+        attribute: {
+          account: account,
+          auth_token: AuthToken.create(account)
+        }
+      }
     end
 
     # Account registration verify
@@ -58,8 +64,6 @@ module CalendarCoordinator
         #{registration[:verification_url]}\n\n
         You will be asked to set a password to activate your account.
       END_EMAIL
-
-      puts "html_email = #{html_email}"
 
       mail_form = MailService.mail_form(from: 'noreply@zeta-cal.com',
                                         to: registration[:email],
