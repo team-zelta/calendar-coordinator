@@ -11,7 +11,7 @@ module CalendarCoordinator
     plugin :multi_route
 
     def secure_request?(routing)
-      routing.scheme.casecmp(API.config.SECURE_SCHEME).zero?
+      routing.scheme.casecmp(ENV['SECURE_SCHEME']).zero?
     end
 
     route do |routing|

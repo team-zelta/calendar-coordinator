@@ -58,6 +58,6 @@ build-iPhoneSimulator/
 app/database/store/*
 
 # To allow testing on github for development, we temporarily add secrets.yml to our git
-# config/secrets.yml
+config/secrets.yml
 
 .bundle/
