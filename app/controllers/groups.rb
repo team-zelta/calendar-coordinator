@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'roda'
+require 'date'
 require_relative './app'
 
 module CalendarCoordinator
@@ -39,20 +40,47 @@ module CalendarCoordinator
           end
         end
 
-        # GET /api/v1/groups/{group_id}/common-busy-time
-        routing.is 'common-busy-time' do
-          routing.get do
-            response.status = 200
-            group_calendars = GroupService.owned_calendars(group_id: group_id)
-            group_calendars ||= raise('Group Calendars not found')
+        # GET /api/v1/groups/{group_id}/common-busy-time/{calendar_mode}/{year}-{month}-{day}
+        routing.on 'common-busy-time' do
+          routing.on String do |calendar_mode|
+            routing.get(String) do |date|
+              response.status = 200
+              group_calendars = GroupService.owned_calendars(group_id: group_id)
+              group_calendars ||= raise('Group Calendars not found')
 
-            all_events = []
-            group_calendars.each do |calendar|
-              events = CalendarService.owned_events(id: calendar.id)
-              all_events += events
+              all_events = []
+              group_calendars.each do |calendar|
+                events = CalendarService.owned_events_by_date(id: calendar.id, mode: calendar_mode, date: date)
+
+                all_events += events
+              end
+
+              EventService.common_busy_time(all_events).to_json
+            rescue StandardError => e
+              routing.halt 404, { message: e.message }.to_json
             end
+          end
+        end
 
-            EventService.common_busy_time(all_events).to_json
+        # GET /api/v1/groups/{group_id}/events/{calendar_mode}/{year}-{month}-{day}
+        routing.on 'events' do
+          routing.on String do |calendar_mode|
+            routing.get(String) do |date|
+              response.status = 200
+              group_calendars = GroupService.owned_calendars(group_id: group_id)
+              group_calendars ||= raise('Group Calendars not found')
+
+              all_events = []
+              group_calendars.each do |calendar|
+                events = CalendarService.owned_events_by_date(id: calendar.id, mode: calendar_mode, date: date)
+
+                all_events.push({ calendar_id: calendar.id, events: events.each(&:to_json) })
+              end
+
+              all_events.to_json
+            rescue StandardError => e
+              routing.halt 404, { message: e.message }.to_json
+            end
           end
         end
 

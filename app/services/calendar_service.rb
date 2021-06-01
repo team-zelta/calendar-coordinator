@@ -36,6 +36,17 @@ module CalendarCoordinator
       get(id: id).events
     end
 
+    # Get owned Events filter by require date
+    def self.owned_events_by_date(id:, mode:, date:)
+      # day or week
+      mode_time = mode == 'day' ? 1 : 7
+
+      Event.where(calendar_id: id)
+           .exclude { end_date_time <= DateTime.parse(date) }
+           .exclude { start_date_time >= DateTime.parse(date) + mode_time }
+           .all
+    end
+
     # Update Calendar
     def self.update(id:, data:)
       Calendar.where(id: id).each { |calendar| calendar.update(data) }
