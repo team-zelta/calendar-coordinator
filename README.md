@@ -27,7 +27,7 @@ All routes return JSON. Check Wiki for more details.
 - POST `api/v1/groups/add-calendar`: Add calendar to group.
 - GET `/api/v1/groups/{group_id}/calendars`: Get group owned calendars.
 - Get `GET /api/v1/groups/{group_id}/common-busy-time/{calendar_mode}/{year}-{month}-{day}`: Get group common busy time.
-- - Get `GET /api/v1/groups/{group_id}/events/{calendar_mode}/{year}-{month}-{day}`: Get group all events.
+- Get `GET /api/v1/groups/{group_id}/events/{calendar_mode}/{year}-{month}-{day}`: Get group all events.
 
 ### Calendar
 - GET `api/v1/calendars`: Get all calendars.
