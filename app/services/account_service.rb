@@ -58,17 +58,8 @@ module CalendarCoordinator
         You will be asked to set a password to activate your account.</p>
       END_EMAIL
 
-      text_email = <<~END_EMAIL
-        ZetaCal Registration Received\n\n
-        Please use the following url to validate your email:\n
-        #{registration[:verification_url]}\n\n
-        You will be asked to set a password to activate your account.
-      END_EMAIL
-
-      mail_form = MailService.mail_form(from: 'noreply@zeta-cal.com',
-                                        to: registration[:email],
+      mail_form = MailService.mail_form(to: registration[:email],
                                         subject: 'ZetaCal Registration Verification',
-                                        text: text_email,
                                         html: html_email)
 
       MailService.send(mail_form: mail_form)
