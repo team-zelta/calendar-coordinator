@@ -36,7 +36,7 @@ module CalendarCoordinator
 
       {
         type: 'authenticated_account',
-        attribute: {
+        attributes: {
           account: account,
           auth_token: AuthToken.create(account)
         }

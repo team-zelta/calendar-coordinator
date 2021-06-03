@@ -49,7 +49,7 @@ def create_owned_calendars
     owner['summary'].each do |summary|
       calendar_data = CALENDAR_INFO.find { |calendar| calendar['summary'] == summary }
       CalendarCoordinator::CalendarService.create(
-        account_id: account.id, data: calendar_data
+        account_id: account.id, calendars: [calendar_data]
       )
     end
   end

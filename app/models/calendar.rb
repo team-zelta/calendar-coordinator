@@ -40,6 +40,7 @@ module CalendarCoordinator
     end
 
     def summary=(plaintext)
+      puts "==DEBUG== summary: #{plaintext}"
       self.summary_secure = SecureDB.encrypt(plaintext)
     end
 
@@ -48,6 +49,7 @@ module CalendarCoordinator
     end
 
     def description=(plaintext)
+      puts "==DEBUG== description: #{plaintext}"
       self.description_secure = SecureDB.encrypt(plaintext)
     end
 
@@ -56,6 +58,7 @@ module CalendarCoordinator
     end
 
     def location=(plaintext)
+      "==DEBUG== location: #{plaintext}"
       self.location_secure = SecureDB.encrypt(plaintext)
     end
 
