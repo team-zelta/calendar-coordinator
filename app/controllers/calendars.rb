@@ -102,10 +102,11 @@ module CalendarCoordinator
 
       # GET /api/v1/calendars
       routing.get do
-        response.status = 200
-        JSON.pretty_generate(CalendarService.all)
-      rescue StandardError => e
-        routing.halt 500, { message: e.message }.to_json
+        account = Account.first(username: @auth_account['username'])
+        calendars = account.calendars
+        JSON.pretty_generate(data: calendars)
+      rescue StandardError
+        routing.halt 403, { message: 'Could not find any calendars' }.to_json
       end
     end
   end
