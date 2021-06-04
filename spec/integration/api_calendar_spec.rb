@@ -6,7 +6,7 @@ describe 'Test CalendarCoordinator Web API - calendar' do
   include Rack::Test::Methods
 
   # Create database and import test data
-  def create_database
+  def create_database # rubocop:disable Metrics/MethodLength
     DATA[:accounts].each do |account|
       CalendarCoordinator::AccountService.create(data: account).save
     end

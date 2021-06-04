@@ -8,6 +8,7 @@ module CalendarCoordinator
   class AccountService
     include Common
 
+    # Error for invalid credentials
     class UnauthorizedError < StandardError
       def initialize(msg = nil)
         super
@@ -41,7 +42,7 @@ module CalendarCoordinator
     end
 
     # Authenticate account
-    def self.authenticate(credentials)
+    def self.authenticate(credentials) # rubocop:disable Metrics/MethodLength
       account = Account.first(username: credentials[:username])
       account.password?(credentials[:password]) ? account : raise(UnauthorizedError, credentials)
 
