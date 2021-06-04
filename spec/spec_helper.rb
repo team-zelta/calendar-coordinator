@@ -17,7 +17,8 @@ def wipe_database
 end
 
 DATA = {} # rubocop:disable Style/MutableConstant
-DATA[:events] = YAML.safe_load(File.read('app/database/seeds/events_seed.yml'))
-DATA[:calendars] = YAML.safe_load(File.read('app/database/seeds/calendars_seed.yml'))
 DATA[:accounts] = YAML.safe_load(File.read('app/database/seeds/accounts_seed.yml'))
+DATA[:calendars] = YAML.safe_load(File.read('app/database/seeds/calendars_seed.yml'))
+DATA[:owners_calendars] = YAML.safe_load(File.read('app/database/seeds/owners_calendars.yml'))
+DATA[:events] = YAML.safe_load(File.read('app/database/seeds/events_seed.yml'))
 DATA[:owners_groups] = YAML.safe_load(File.read('app/database/seeds/owners_groups.yml'))

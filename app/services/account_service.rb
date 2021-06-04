@@ -8,6 +8,17 @@ module CalendarCoordinator
   class AccountService
     include Common
 
+    class UnauthorizedError < StandardError
+      def initialize(msg = nil)
+        super
+        @credentials = msg
+      end
+
+      def message
+        "Invalid Credentials for: #{@credentials[:username]}"
+      end
+    end
+
     # Create Account
     def self.create(data:)
       Account.create(data)
@@ -41,6 +52,8 @@ module CalendarCoordinator
           auth_token: AuthToken.create(account)
         }
       }
+    rescue StandardError
+      raise(UnauthorizedError, credentials)
     end
 
     # Account registration verify
