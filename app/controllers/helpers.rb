@@ -12,7 +12,7 @@ module CalendarCoordinator
 
       scheme, auth_token = headers['AUTHORIZATION'].split
       account_payload = AuthToken.payload(auth_token)
-      scheme.match?(/^Bearer$/i) ? account_payload['attributes'] : nil
+      scheme.match?(/^Bearer$/i) ? account_payload : nil
     end
   end
 end

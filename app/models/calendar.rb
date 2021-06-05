@@ -62,17 +62,14 @@ module CalendarCoordinator
     def to_json(options = {}) # rubocop:disable Metrics/MethodLength
       JSON(
         {
-          type: 'calendar',
-          attributes: {
-            id: id,
-            gid: gid,
-            account_id: account_id,
-            summary: summary,
-            description: description,
-            location: location,
-            time_zone: time_zone,
-            access_role: access_role
-          }
+          id: id,
+          gid: gid,
+          account_id: account_id,
+          summary: summary,
+          description: description,
+          location: location,
+          time_zone: time_zone,
+          access_role: access_role
         },
         options
       )

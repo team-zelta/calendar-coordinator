@@ -33,7 +33,7 @@ describe 'Test CalendarCoordinator Web API - calendar' do
       username: DATA[:accounts][0]['username'],
       password: DATA[:accounts][0]['password']
     )
-    header 'AUTHORIZATION', "Bearer #{auth[:attributes][:auth_token]}"
+    header 'AUTHORIZATION', "Bearer #{auth[:auth_token]}"
     get 'api/v1/calendars'
     _(last_response.status).must_equal 200
 
@@ -56,7 +56,7 @@ describe 'Test CalendarCoordinator Web API - calendar' do
     get "api/v1/calendars/#{id}"
 
     result = JSON.parse(last_response.body)
-    _(result['attributes']['summary']).must_equal 'Tony Calendar'
+    _(result['summary']).must_equal 'Tony Calendar'
   end
 
   it 'SAD: should not be able to get calendar if unknown calendar requested' do

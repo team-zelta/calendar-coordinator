@@ -42,7 +42,7 @@ module CalendarCoordinator
     end
 
     # Authenticate account
-    def self.authenticate(credentials) # rubocop:disable Metrics/MethodLength
+    def self.authenticate(credentials)
       account = Account.first(username: credentials[:username])
       account.password?(credentials[:password]) ? account : raise(UnauthorizedError, credentials)
 

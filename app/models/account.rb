@@ -43,15 +43,12 @@ module CalendarCoordinator
       digest.correct?(try_password)
     end
 
-    def to_json(options = {}) # rubocop:disable Metrics/MethodLength
+    def to_json(options = {})
       JSON(
         {
-          type: 'account',
-          attributes: {
-            id: id,
-            username: username,
-            email: email
-          }
+          id: id,
+          username: username,
+          email: email
         },
         options
       )
