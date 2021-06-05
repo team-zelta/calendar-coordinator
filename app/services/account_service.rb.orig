@@ -47,8 +47,16 @@ module CalendarCoordinator
       account.password?(credentials[:password]) ? account : raise(UnauthorizedError, credentials)
 
       {
+<<<<<<< HEAD
+        type: 'authenticated_account',
+        attributes: {
+          account: account,
+          auth_token: AuthToken.create(account)
+        }
+=======
         account: account,
         auth_token: AuthToken.create(account)
+>>>>>>> main
       }
     rescue StandardError
       raise(UnauthorizedError, credentials)
