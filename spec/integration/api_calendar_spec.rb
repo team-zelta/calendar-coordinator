@@ -6,14 +6,19 @@ describe 'Test CalendarCoordinator Web API - calendar' do
   include Rack::Test::Methods
 
   # Create database and import test data
-  def create_database
+  def create_database # rubocop:disable Metrics/MethodLength
     DATA[:accounts].each do |account|
       CalendarCoordinator::AccountService.create(data: account).save
     end
 
-    account = CalendarCoordinator::Account.first
-    DATA[:calendars].each do |calendar|
-      account.add_owned_calendar(calendar)
+    DATA[:owners_calendars].each do |owner|
+      account = CalendarCoordinator::Account.first(username: owner['username'])
+      owner['summary'].each do |summary|
+        calendar_data = DATA[:calendars].find { |calendar| calendar['summary'] == summary }
+        CalendarCoordinator::CalendarService.create(
+          account_id: account.id, calendars: [calendar_data]
+        )
+      end
     end
   end
 
@@ -23,17 +28,31 @@ describe 'Test CalendarCoordinator Web API - calendar' do
   end
 
   # Get all calendars
-  it 'HAPPY: should be able to get list of all calendars' do
+  it 'HAPPY: should get list for authorized account' do
+    auth = CalendarCoordinator::AccountService.authenticate(
+      username: DATA[:accounts][0]['username'],
+      password: DATA[:accounts][0]['password']
+    )
+    header 'AUTHORIZATION', "Bearer #{auth[:auth_token]}"
     get 'api/v1/calendars'
+    _(last_response.status).must_equal 200
 
-    result = JSON.parse(last_response.body)
-    _(result.count).must_equal 2
+    result = JSON.parse last_response.body
+    _(result['data'].count).must_equal 1
+  end
+
+  it 'BAD: should not process for unauthorized account' do
+    header 'AUTHORIZATION', 'Bearer bad_token'
+    get 'api/v1/calendars'
+    _(last_response.status).must_equal 403
+
+    result = JSON.parse last_response.body
+    _(result['data']).must_be_nil
   end
 
   # Get calendar by id
   it 'HAPPY: should be able to get calendar by id' do
     id = CalendarCoordinator::Calendar.first.id
-
     get "api/v1/calendars/#{id}"
 
     result = JSON.parse(last_response.body)
