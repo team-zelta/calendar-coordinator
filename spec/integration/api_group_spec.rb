@@ -4,7 +4,6 @@ require_relative '../spec_helper'
 
 describe 'Test CalendarCoordinator Web API - group' do
   include Rack::Test::Methods
-  @clean_result = 0
 
   # Create database and import test data
   def create_database
@@ -27,10 +26,14 @@ describe 'Test CalendarCoordinator Web API - group' do
   # Get all groups
   it 'HAPPY: should be able to get list of all groups' do
     create_database
+
+    account = DATA[:accounts].clone[0]
+
+    header 'AUTHORIZATION', auth_header(account)
     get 'api/v1/groups'
 
     result = JSON.parse(last_response.body)
-    _(result.count).must_equal 2
+    _(result.count).must_equal 1
   end
 
   # Get group by id

@@ -16,6 +16,15 @@ def wipe_database
   app.DB[:accounts].delete
 end
 
+def auth_header(account_data)
+  auth = CalendarCoordinator::AccountService.authenticate(
+    username: account_data['username'],
+    password: account_data['password']
+  )
+
+  "Bearer #{auth[:auth_token]}"
+end
+
 DATA = {} # rubocop:disable Style/MutableConstant
 DATA[:accounts] = YAML.safe_load(File.read('app/database/seeds/accounts_seed.yml'))
 DATA[:calendars] = YAML.safe_load(File.read('app/database/seeds/calendars_seed.yml'))
