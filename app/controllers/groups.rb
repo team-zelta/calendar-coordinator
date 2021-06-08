@@ -84,14 +84,20 @@ module CalendarCoordinator
           end
         end
 
-        # GET /api/v1/groups/{group_id}/delete
+        # GET /api/v1//groups/{group_id}/delete
         routing.is 'delete' do
           routing.get do
             response.status = 200
-            group = GroupService.delete(id: group_id)
-            group ? group.to_json : raise('Group not deleted')
+
+            account = AccountService.get(id: @auth_account['id'])
+            group = GroupService.get(id: group_id)
+            policy = GroupPolicy.new(account, group)
+            raise UnauthorizedError unless policy.can_delete?
+
+            group_del = GroupService.delete(id: group_id)
+            group_del ? group_del.to_json : raise('Group not deleted')
           rescue StandardError => e
-            routing.halt 404, { message: e.message }.to_json
+            routing.halt 404, { message: e.full_message }.to_json
           end
         end
 
@@ -108,7 +114,11 @@ module CalendarCoordinator
       # GET /api/v1/groups
       routing.get do
         response.status = 200
-        JSON.pretty_generate(GroupService.all)
+
+        account = AccountService.get(id: @auth_account['id'])
+        groups = GroupPolicy::AccountScope.new(account).viewable
+
+        JSON.pretty_generate(groups)
       rescue StandardError => e
         routing.halt 500, { message: e.message }.to_json
       end

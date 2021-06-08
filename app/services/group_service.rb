@@ -38,7 +38,6 @@ module CalendarCoordinator
     # Delete Group by id
     def self.delete(id:)
       group = get(id: id)
-      puts group
       group ? group.destroy : raise('Group not found')
     end
 
@@ -62,6 +61,12 @@ module CalendarCoordinator
     def self.owned_calendars(group_id:)
       group = get(id: group_id)
       group.owned_calendars
+    end
+
+    # Get Owned Accounts
+    def self.owned_accounts(group_id:)
+      group = get(id: group_id)
+      group.owned_accounts
     end
   end
 end
