@@ -8,6 +8,8 @@ module Common
     # Error for invalid registration details
     class InvalidRegistration < StandardError; end
 
+    class InvalidInviation < StandardError; end
+
     MAIL_API_KEY = ENV['SENDGRID_API_KEY']
     MAIL_FROM = ENV['SENDGRID_FROM_EMAIL']
     MAIL_URL = 'https://api.sendgrid.com/v3/mail/send'
