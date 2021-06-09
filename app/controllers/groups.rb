@@ -28,6 +28,49 @@ module CalendarCoordinator
         end
       end
 
+      # POST /api/v1/groups/invite
+      routing.is 'invite' do
+        routing.post do
+          invitation_data = JsonRequestBody.parse_symbolize(request.body.read)
+
+          GroupService.invitation_mail(invitation_data)
+          response.status = 202
+          { message: 'Invitation email sent' }.to_json
+        rescue MailService::InvalidInviation => e
+          puts e.full_message
+          routing.halt 400, { message: e.message }.to_json
+        rescue StandardError => e
+          puts "ERROR SENDING INVIATION MAIL: #{e.inspect}"
+          puts e.full_message
+          routing.halt 500
+        end
+      end
+
+      # POST /api/v1/groups/join
+      routing.is 'join' do
+        routing.post do
+          data = JSON.parse(routing.body.read)
+
+          group = GroupService.get(id: data['group_id'])
+          group_join = GroupService.join(account_id: @auth_account['id'], group: group)
+          if group_join
+            response.status = 201
+            { message: 'Group joined', group_id: group_join.id }.to_json
+          else
+            routing.halt 400, { message: 'Join Group failed' }.to_json
+          end
+        rescue Sequel::MassAssignmentRestriction => e
+          API.logger.warn "MASS-ASSIGNMENT: #{data.keys}"
+          routing.halt 400, { message: "Illegal Attributes : #{e}" }.to_json
+        rescue UnauthorizedError => e
+          puts [e.class, e.message].join ': '
+          routing.halt '403', { message: 'Invalid credentials' }.to_json
+        rescue StandardError => e
+          API.logger.error "UNKOWN ERROR: #{e.full_message}"
+          routing.halt 500, { message: e.message }.to_json
+        end
+      end
+
       routing.on String do |group_id| # rubocop:disable Metrics/BlockLength
         # GET /api/v1/groups/{group_id}/calendars
         routing.is 'calendars' do
@@ -37,6 +80,23 @@ module CalendarCoordinator
             group_calendars ? group_calendars.to_json : raise('Group Calendars not found')
           rescue StandardError => e
             routing.halt 404, { message: e.message }.to_json
+          end
+        end
+
+        # GET /api/v1/groups/{group_id}/delete
+        routing.is 'delete' do
+          routing.get do
+            response.status = 200
+
+            account = AccountService.get(id: @auth_account['id'])
+            group = GroupService.get(id: group_id)
+            policy = GroupPolicy.new(account, group)
+            raise UnauthorizedError unless policy.can_delete?
+
+            group_del = GroupService.delete(id: group_id)
+            group_del ? group_del.to_json : raise('Group not deleted')
+          rescue StandardError => e
+            routing.halt 404, { message: e.full_message }.to_json
           end
         end
 
@@ -81,23 +141,6 @@ module CalendarCoordinator
             rescue StandardError => e
               routing.halt 404, { message: e.message }.to_json
             end
-          end
-        end
-
-        # GET /api/v1//groups/{group_id}/delete
-        routing.is 'delete' do
-          routing.get do
-            response.status = 200
-
-            account = AccountService.get(id: @auth_account['id'])
-            group = GroupService.get(id: group_id)
-            policy = GroupPolicy.new(account, group)
-            raise UnauthorizedError unless policy.can_delete?
-
-            group_del = GroupService.delete(id: group_id)
-            group_del ? group_del.to_json : raise('Group not deleted')
-          rescue StandardError => e
-            routing.halt 404, { message: e.full_message }.to_json
           end
         end
 

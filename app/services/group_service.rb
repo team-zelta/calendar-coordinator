@@ -41,14 +41,6 @@ module CalendarCoordinator
       group ? group.destroy : raise('Group not found')
     end
 
-    # Authenticate group
-    def self.authenticate(credentials)
-      group = Group.find(id: credentials[:group_id])
-      group.password?(credentials[:password]) ? group : raise
-    rescue StandardError
-      raise UnauthorizedError, credentials
-    end
-
     # Add Calendar to Group
     def self.add_calendar(calendar_id:, group_id:)
       group = get(id: group_id)
@@ -67,6 +59,28 @@ module CalendarCoordinator
     def self.owned_accounts(group_id:)
       group = get(id: group_id)
       group.owned_accounts
+    end
+
+    # Group invitation
+    def self.invitation_mail(invitation_data) # rubocop:disable Metrics/MethodLength
+      puts invitation_data
+      user_avaliable = Account.first(email: invitation_data[:email])
+      raise(MailService::InvalidInviation, 'User not exists') unless user_avaliable
+
+      group_avaliable = Group.first(id: invitation_data[:group_id])
+      raise(MailService::InvalidInviation, 'Group not exists') unless group_avaliable
+
+      html_email = <<~END_EMAIL
+        <H1>ZetaCal App Group Invitation</H1>
+        <p>Please <a href=\"#{invitation_data[:invitation_url]}\">click here</a>
+        to join Group "#{group_avaliable.groupname}".</p>
+      END_EMAIL
+
+      mail_form = MailService.mail_form(to: invitation_data[:email],
+                                        subject: 'ZetaCal Group Inviation',
+                                        html: html_email)
+
+      MailService.send(mail_form: mail_form)
     end
   end
 end
