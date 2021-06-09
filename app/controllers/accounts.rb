@@ -5,7 +5,7 @@ require_relative './app'
 
 module CalendarCoordinator
   # API for accounts route
-  class API < Roda # rubocop:disable Metrics/ClassLength
+  class API < Roda
     route('accounts') do |routing| # rubocop:disable Metrics/BlockLength
       routing.on String do |account_id| # rubocop:disable Metrics/BlockLength
         routing.on 'calendars' do
@@ -28,7 +28,7 @@ module CalendarCoordinator
           end
         end
 
-        routing.on 'groups' do # rubocop:disable Metrics/BlockLength
+        routing.on 'groups' do
           # POST /api/v1/accounts/{account_id}/groups/join
           routing.is 'join' do
             routing.post do
@@ -53,24 +53,6 @@ module CalendarCoordinator
               API.logger.error "UNKOWN ERROR: #{e.full_message}"
               routing.halt 500, { message: e.message }.to_json
             end
-          end
-
-          # POST /api/v1/accounts/{account_id}/groups
-          routing.post do
-            data = JSON.parse(routing.body.read)
-            group = GroupService.create(account_id: account_id, data: data)
-            if group
-              response.status = 201
-              { message: 'Group saved', group_id: group.id }.to_json
-            else
-              routing.halt 400, { message: 'Save Group failed' }.to_json
-            end
-          rescue Sequel::MassAssignmentRestriction => e
-            API.logger.warn "MASS-ASSIGNMENT: #{data.keys}"
-            routing.halt 400, { message: "Illegal Attributes : #{e}" }.to_json
-          rescue StandardError => e
-            API.logger.error "UNKOWN ERROR: #{e.message}"
-            routing.halt 500, { message: e.message }.to_json
           end
         end
 
