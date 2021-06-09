@@ -77,11 +77,12 @@ describe 'Test CalendarCoordinator Web API - group' do
     DATA[:accounts].each do |account|
       CalendarCoordinator::AccountService.create(data: account)
     end
-    account_id = CalendarCoordinator::Account.first.id
+    account = DATA[:accounts].clone[0]
+
     group = DATA[:owners_groups].clone[0]['groups'][0]
 
-    req_header = { 'Content-Type' => 'application/json' }
-    post "api/v1/accounts/#{account_id}/groups", group.to_json, req_header
+    header 'AUTHORIZATION', auth_header(account)
+    post 'api/v1/groups', group.to_json
 
     result = JSON.parse(last_response.body)
     _(last_response.status).must_equal 201
@@ -92,12 +93,13 @@ describe 'Test CalendarCoordinator Web API - group' do
     DATA[:accounts].each do |account|
       CalendarCoordinator::AccountService.create(data: account)
     end
-    account_id = CalendarCoordinator::Account.first.id
+    account = DATA[:accounts].clone[0]
     cloned_group = DATA[:owners_groups][0]['groups'][0].clone
     cloned_group['id'] = '00000000-0000-0000-0000-000000000000'
 
+    header 'AUTHORIZATION', auth_header(account)
     req_header = { 'Content-Type' => 'application/json' }
-    post "api/v1/accounts/#{account_id}/groups", cloned_group.to_json, req_header
+    post 'api/v1/groups', cloned_group.to_json, req_header
 
     _(last_response.status).must_equal 400
   end
