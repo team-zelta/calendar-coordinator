@@ -36,11 +36,18 @@ module CalendarCoordinator
       get(id: id).events
     end
 
+    # Get belonged Accounts
+    def self.belonged_accounts(id:)
+      calendar = get(id: id)
+      AccountService.get(id: calendar.account_id)
+    end
+
     # Get owned Events filter by require date
     def self.owned_events_by_date(id:, mode:, date:)
       # day or week
       mode_time = mode == 'day' ? 1 : 7
 
+      puts Event.where(calendar_id: id)
       Event.where(calendar_id: id)
            .exclude { end_date_time <= DateTime.parse(date) }
            .exclude { start_date_time >= DateTime.parse(date) + mode_time }
