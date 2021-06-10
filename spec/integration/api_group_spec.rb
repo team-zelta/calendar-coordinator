@@ -41,6 +41,8 @@ describe 'Test CalendarCoordinator Web API - group' do
     create_database
     group_id = CalendarCoordinator::Group.first.id
 
+    account = DATA[:accounts].clone[0]
+    header 'AUTHORIZATION', auth_header(account)
     get "api/v1/groups/#{group_id}"
 
     result = JSON.parse(last_response.body)
@@ -50,6 +52,9 @@ describe 'Test CalendarCoordinator Web API - group' do
   it 'SAD: should not be able to get group by id due to group not exist' do
     create_database
     group_id = '00000000-0000-0000-0000-000000000000'
+
+    account = DATA[:accounts].clone[0]
+    header 'AUTHORIZATION', auth_header(account)
     get "api/v1/groups/#{group_id}"
 
     result = JSON.parse(last_response.body)
@@ -58,13 +63,19 @@ describe 'Test CalendarCoordinator Web API - group' do
 
   it 'SAD: should return error if unknown group requested' do
     create_database
-    get 'api/v1/groups/foo'
+
+    account = DATA[:accounts].clone[0]
+    header 'AUTHORIZATION', auth_header(account)
+    get 'api/v1/groupsfoo'
 
     _(last_response.status).must_equal 404
   end
 
   it 'SECURITY: should prevent basic SQL injection targeting IDs' do
     create_database
+
+    account = DATA[:accounts].clone[0]
+    header 'AUTHORIZATION', auth_header(account)
     get 'api/v1/groups/2%20or%20id%3E0'
 
     # deliberately not reporting error -- don't give attacker information

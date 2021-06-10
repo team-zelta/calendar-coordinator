@@ -221,7 +221,7 @@ module CalendarCoordinator
 
           account = AccountService.get(id: @auth_account['id'])
           group = GroupService.get(id: group_id)
-          raise('Group not found') unless group
+          routing.halt 404, { message: 'Group not found' }.to_json unless group
 
           policy = GroupPolicy.new(account, group)
           raise UnauthorizedError unless policy.can_view?
