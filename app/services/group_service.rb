@@ -35,6 +35,11 @@ module CalendarCoordinator
       Group.all
     end
 
+    # Update group
+    def self.update(id, data)
+      Group.find(id: id).update(data)
+    end
+
     # Delete Group by id
     def self.delete(id:)
       group = get(id: id)
@@ -61,9 +66,17 @@ module CalendarCoordinator
       group.owned_accounts
     end
 
+    # Delete account from group
+    def self.delete_account(group_id, account_id)
+      account = AccountService.get(id: account_id)
+      raise('Account not found') unless account
+
+      group = get(id: group_id)
+      account.remove_belonged_group(group)
+    end
+
     # Group invitation
     def self.invitation_mail(invitation_data) # rubocop:disable Metrics/MethodLength
-      puts invitation_data
       user_avaliable = Account.first(email: invitation_data[:email])
       raise(MailService::InvalidInviation, 'User not exists') unless user_avaliable
 
