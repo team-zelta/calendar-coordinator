@@ -144,15 +144,12 @@ module CalendarCoordinator
         routing.is 'update' do
           routing.post do
             account = AccountService.get(id: @auth_account['id'])
-            puts account.id
-            puts group_id
             group = GroupService.get(id: group_id)
 
             policy = GroupPolicy.new(account, group)
             raise UnauthorizedError unless policy.can_edit?
 
             data = JSON.parse(routing.body.read)
-            puts data
             group = GroupService.update(group_id, data)
 
             if group
