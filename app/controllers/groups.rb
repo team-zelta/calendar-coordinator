@@ -211,11 +211,14 @@ module CalendarCoordinator
               group_calendars.each do |calendar|
                 events = CalendarService.owned_events_by_date(id: calendar.id, mode: calendar_mode, date: date)
 
-                all_events.push({ calendar_id: calendar.id, events: events.each(&:to_json) })
+                account = CalendarService.belonged_accounts(id: calendar.id)
+
+                all_events.push({ username: account.username, events: events.each(&:to_json) })
               end
 
               all_events.to_json
             rescue StandardError => e
+              puts e.full_message
               routing.halt 404, { message: e.message }.to_json
             end
           end
