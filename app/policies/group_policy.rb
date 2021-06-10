@@ -8,6 +8,14 @@ module CalendarCoordinator
       @group = group
     end
 
+    def can_view?
+      account_is_member?
+    end
+
+    def can_edit?
+      account_is_owner?
+    end
+
     def can_delete?
       account_is_owner?
     end
@@ -22,6 +30,8 @@ module CalendarCoordinator
 
     def summary
       {
+        can_view: can_view?,
+        can_edit: can_edit?,
         can_delete: can_delete?,
         can_leave: can_leave?,
         can_remove_member: can_remove_member?
@@ -35,8 +45,8 @@ module CalendarCoordinator
     end
 
     def account_is_member?
-      members = GroupService.owned_accounts(@group.id)
-      members.include?(@account)
+      members = GroupService.owned_accounts(group_id: @group.id)
+      members.include?(@account) || account_is_owner?
     end
   end
 end

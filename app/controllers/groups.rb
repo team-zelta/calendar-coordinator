@@ -78,8 +78,49 @@ module CalendarCoordinator
             response.status = 200
             group_calendars = GroupService.owned_calendars(group_id: group_id)
             group_calendars ? group_calendars.to_json : raise('Group Calendars not found')
+
+            group = GroupService.get(id: group_id)
+
+            { group: group, calendars: group_calendars }.to_json
           rescue StandardError => e
             routing.halt 404, { message: e.message }.to_json
+          end
+        end
+
+        routing.on 'accounts' do # rubocop:disable Metrics/BlockLength
+          routing.on String do |account_id|
+            # GET /api/v1/groups/{group_id}/accounts/{account_id}/delete
+            routing.is 'delete' do
+              routing.get do
+                response.status = 200
+
+                account = AccountService.get(id: @auth_account['id'])
+                group = GroupService.get(id: group_id)
+
+                policy = GroupPolicy.new(account, group)
+                raise UnauthorizedError unless policy.can_remove_member?
+
+                result = GroupService.delete_account(group_id, account_id)
+                result.to_json
+              rescue UnauthorizedError
+                routing.halt 404, { message: 'Delete failed' }.to_json
+              rescue StandardError => e
+                puts e.full_message
+                routing.halt 500, { message: e.message }.to_json
+              end
+            end
+          end
+
+          # GET /api/v1/groups/{group_id}/accounts
+          routing.get do
+            response.status = 200
+
+            accounts = GroupService.owned_accounts(group_id: group_id)
+            raise('Group owned accounts not found') unless accounts
+
+            accounts.to_json
+          rescue StandardError
+            routing.halt 404, { message: e.full_message }.to_json
           end
         end
 
@@ -97,6 +138,36 @@ module CalendarCoordinator
             group_del ? group_del.to_json : raise('Group not deleted')
           rescue StandardError => e
             routing.halt 404, { message: e.full_message }.to_json
+          end
+        end
+
+        routing.is 'update' do
+          routing.post do
+            account = AccountService.get(id: @auth_account['id'])
+            puts account.id
+            puts group_id
+            group = GroupService.get(id: group_id)
+
+            policy = GroupPolicy.new(account, group)
+            raise UnauthorizedError unless policy.can_edit?
+
+            data = JSON.parse(routing.body.read)
+            puts data
+            group = GroupService.update(group_id, data)
+
+            if group
+              response.status = 201
+              { message: 'Group updated', group_id: group_id }.to_json
+            else
+              routing.halt 400, { message: 'Update Group failed' }.to_json
+            end
+          rescue Sequel::MassAssignmentRestriction => e
+            API.logger.warn "MASS-ASSIGNMENT: #{data.keys}"
+            routing.halt 400, { message: "Illegal Attributes : #{e}" }.to_json
+          rescue StandardError => e
+            puts e.full_message
+            API.logger.error "UNKOWN ERROR: #{e.full_message}"
+            routing.halt 500, { message: e.full_message }.to_json
           end
         end
 
@@ -147,10 +218,20 @@ module CalendarCoordinator
         # GET /api/v1/groups/{group_id}
         routing.get do
           response.status = 200
+
+          account = AccountService.get(id: @auth_account['id'])
           group = GroupService.get(id: group_id)
-          group ? group.to_json : raise('Group not found')
+          raise('Group not found') unless group
+
+          policy = GroupPolicy.new(account, group)
+          raise UnauthorizedError unless policy.can_view?
+
+          group.to_json
+        rescue UnauthorizedError
+          routing.halt 404, { message: 'Group not found' }.to_json
         rescue StandardError => e
-          routing.halt 404, { message: e.message }.to_json
+          puts e.full_message
+          routing.halt 500, { message: e.message }.to_json
         end
       end
 
