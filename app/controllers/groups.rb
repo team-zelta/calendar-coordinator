@@ -118,8 +118,17 @@ module CalendarCoordinator
             accounts = GroupService.owned_accounts(group_id: group_id)
             raise('Group owned accounts not found') unless accounts
 
+            group = GroupService.get(id: group_id)
+            owner = AccountService.get(id: group.account_id)
+            raise('Group Owner not found') unless owner
+
+            owner.username += ' (owner)'
+
+            accounts.prepend(owner)
+
             accounts.to_json
-          rescue StandardError
+          rescue StandardError => e
+            puts e.full_message
             routing.halt 404, { message: e.full_message }.to_json
           end
         end
