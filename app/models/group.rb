@@ -48,7 +48,7 @@ module CalendarCoordinator
     end
 
     def to_json(options = {})
-      JSON(to_hash,options)
+      JSON(to_hash, options)
     end
   end
 end
