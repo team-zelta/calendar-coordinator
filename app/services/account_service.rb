@@ -41,6 +41,12 @@ module CalendarCoordinator
       account ? account.destroy : raise('Account not found')
     end
 
+    # Get Owend Calendars
+    def self.owned_calendars(id:)
+      account = get(id: id)
+      account.owned_calendars
+    end
+
     # Authenticate account
     def self.authenticate(credentials)
       account = Account.first(username: credentials[:username])

@@ -109,6 +109,33 @@ module CalendarCoordinator
                 routing.halt 500, { message: e.message }.to_json
               end
             end
+
+            # GET /api/v1/groups/{group_id}/accounts/{account_id}/calendar
+            routing.is 'calendar' do
+              routing.get do
+                response.status = 200
+
+                account = AccountService.get(id: @auth_account['id'])
+                group = GroupService.get(id: group_id)
+
+                policy = GroupPolicy.new(account, group)
+                raise UnauthorizedError unless policy.can_view?
+
+                group_calendar = GroupService.owned_calendars(group_id: group_id)
+                group_calendar ||= []
+
+                account_calendar = AccountService.owned_calendars(id: account_id)
+                account_calendar ||= []
+
+                (group_calendar & account_calendar).to_json
+              rescue UnauthorizedError
+                routing.halt 404, { message: 'Get Calendar failed' }.to_json
+              rescue StandardError => e
+                puts e.full_message
+                routing.halt 500, { message: e.message }.to_json
+              end
+            end
+
           end
 
           # GET /api/v1/groups/{group_id}/accounts
