@@ -39,15 +39,16 @@ module CalendarCoordinator
       digest.correct?(try_password)
     end
 
+    def to_hash
+      {
+        id: id,
+        account_id: account_id,
+        groupname: groupname
+      }
+    end
+
     def to_json(options = {})
-      JSON(
-        {
-          id: id,
-          account_id: account_id,
-          groupname: groupname
-        },
-        options
-      )
+      JSON(to_hash,options)
     end
   end
 end

@@ -235,7 +235,7 @@ module CalendarCoordinator
           policy = GroupPolicy.new(account, group)
           raise UnauthorizedError unless policy.can_view?
 
-          group.to_json
+          group.to_hash.merge(policies: policy.summary).to_json
         rescue UnauthorizedError
           routing.halt 404, { message: 'Group not found' }.to_json
         rescue StandardError => e
