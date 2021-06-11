@@ -88,7 +88,7 @@ module CalendarCoordinator
         end
 
         routing.on 'accounts' do # rubocop:disable Metrics/BlockLength
-          routing.on String do |account_id|
+          routing.on String do |account_id| # rubocop:disable Metrics/BlockLength
             # GET /api/v1/groups/{group_id}/accounts/{account_id}/delete
             routing.is 'delete' do
               routing.get do
@@ -135,7 +135,6 @@ module CalendarCoordinator
                 routing.halt 500, { message: e.message }.to_json
               end
             end
-
           end
 
           # GET /api/v1/groups/{group_id}/accounts
