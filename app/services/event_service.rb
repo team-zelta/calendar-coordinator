@@ -13,6 +13,8 @@ module CalendarCoordinator
     # Create Event
     def self.create(calendar_id:, data:)
       calendar = CalendarService.get(id: calendar_id)
+      return if Event.find(gid: data['gid'])
+
       calendar.add_event(data)
     end
 
@@ -33,21 +35,27 @@ module CalendarCoordinator
     end
 
     # Get list from google and insert into database
-    def self.list_from_google(calendar_id:) # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
-      event_google = EventGoogle.list
+    def self.save_from_google(calendar_gid, google_events) # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
+      google_events.each do |google_event|
+        event = {
+          gid: google_event.id,
+          summary: google_event.summary,
+          status: google_event.status,
+          description: google_event.description,
+          location: google_event.location,
+          start_date_time: DateTime.parse(google_event.start.date || google_event.start.date_time),
+          start_time_zone: google_event.start.time_zone,
+          end_date_time: DateTime.parse(google_event.end.date || google_event.end.date_time),
+          end_time_zone: google_event.end.time_zone
+        }
 
-      event = Event.new
-      event.gid = event_google.gid
-      event.summary = event_google.summary
-      event.status = event_google.status
-      event.description = event_google.description
-      event.location = event_google.location
-      event.start_date_time = DateTime.parse(event_google.start.date || event_google.start.date_time)
-      event.start_time_zone = event_google.start.time_zone
-      event.end_date_time = DateTime.parse(event_google.end.date || event_google.end.date_time)
-      event.end_time_zone = event_google.end.time_zone
+        calendar = Calendar.find(gid: calendar_gid)
+        raise('Calendar not found') unless calendar
 
-      create(calendar_id, event)
+        next if Event.find(gid: event[:gid])
+
+        calendar.add_event(event)
+      end
     end
 
     # Compare all the events to find common busy time
