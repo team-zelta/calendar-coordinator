@@ -43,9 +43,9 @@ module CalendarCoordinator
           status: google_event.status,
           description: google_event.description,
           location: google_event.location,
-          start_date_time: DateTime.parse(google_event.start.date || google_event.start.date_time),
+          start_date_time: DateTime.parse(google_event.start.date || google_event.start.dateTime),
           start_time_zone: google_event.start.time_zone,
-          end_date_time: DateTime.parse(google_event.end.date || google_event.end.date_time),
+          end_date_time: DateTime.parse(google_event.end.date || google_event.end.dateTime),
           end_time_zone: google_event.end.time_zone
         }
 
