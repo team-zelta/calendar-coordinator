@@ -27,14 +27,6 @@ module CalendarCoordinator
     set_allowed_columns :gid, :summary, :description, :location, :time_zone, :access_role
 
     # Secure getters and setters
-    def gid
-      SecureDB.decrypt(gid_secure)
-    end
-
-    def gid=(plaintext)
-      self.gid_secure = SecureDB.encrypt(plaintext)
-    end
-
     def summary
       SecureDB.decrypt(summary_secure)
     end

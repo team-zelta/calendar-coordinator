@@ -9,7 +9,7 @@ Sequel.migration do
       uuid :id, primary_key: true
       uuid :calendar_id, foreign_key: true, table: :calendars
 
-      String :gid_secure, unique: true
+      String :gid, unique: true
       String :status
       String :summary_secure, null: false
       String :description_secure
