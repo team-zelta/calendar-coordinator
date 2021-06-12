@@ -38,10 +38,5 @@ module GoogleCalendar
         options
       )
     end
-
-    # Get event list from google
-    def self.list
-      'Not Implement'
-    end
   end
 end
