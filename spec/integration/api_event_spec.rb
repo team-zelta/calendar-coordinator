@@ -74,7 +74,8 @@ describe 'Test CalendarCoordinator Web API - event' do
   it 'HAPPY: should be able to create event' do
     calendar_id = CalendarCoordinator::Calendar.first.id
 
-    event = DATA[:events][0]
+    event = DATA[:events][0].clone
+    event['gid'] = 'abc005'
 
     req_header = { 'Content-Type' => 'application/json' }
     post "api/v1/calendars/#{calendar_id}/events", event.to_json, req_header

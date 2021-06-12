@@ -90,6 +90,7 @@ describe 'Test CalendarCoordinator Web API - calendar' do
   it 'SECURITY: should not be able to create calendar by mass assignment' do
     sample_calendar = DATA[:calendars][1].clone
     sample_calendar['id'] = '00000000-0000-0000-0000-000000000000'
+    sample_calendar['gid'] = 'abc001'
 
     account = CalendarCoordinator::Account.first
 

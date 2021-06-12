@@ -13,6 +13,8 @@ module CalendarCoordinator
     # Create Event
     def self.create(calendar_id:, data:)
       calendar = CalendarService.get(id: calendar_id)
+      return if Event.find(gid: data['gid'])
+
       calendar.add_event(data)
     end
 
@@ -49,6 +51,8 @@ module CalendarCoordinator
 
         calendar = Calendar.find(gid: calendar_gid)
         raise('Calendar not found') unless calendar
+
+        next if Event.find(gid: event[:gid])
 
         calendar.add_event(event)
       end
