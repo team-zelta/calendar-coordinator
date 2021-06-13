@@ -12,7 +12,9 @@ module CalendarCoordinator
       routing.is 'add-calendar' do
         routing.post do
           data = JSON.parse(routing.body.read)
-          calendar = GroupService.add_calendar(calendar_id: data['calendar_id'], group_id: data['group_id'])
+          calendar = GroupService.add_calendar(account_id: @auth_account['id'],
+                                               calendar_id: data['calendar_id'],
+                                               group_id: data['group_id'])
           if calendar
             response.status = 201
             { message: 'Add calendar to group success', calendar_id: calendar.id }.to_json
@@ -23,6 +25,7 @@ module CalendarCoordinator
           API.logger.warn "MASS-ASSIGNMENT: #{data.keys}"
           routing.halt 400, { message: "Illegal Attributes : #{e}" }.to_json
         rescue StandardError => e
+          puts e.full_message
           API.logger.error "UNKOWN ERROR: #{e.message}"
           routing.halt 500, { message: e.message }.to_json
         end
