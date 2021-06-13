@@ -12,8 +12,8 @@ module CalendarCoordinator
       routing.is 'add-calendar' do
         routing.post do
           data = JSON.parse(routing.body.read)
-          calendar = GroupService.add_calendar(account_id: @auth_account['id'], 
-                                               calendar_id: data['calendar_id'], 
+          calendar = GroupService.add_calendar(account_id: @auth_account['id'],
+                                               calendar_id: data['calendar_id'],
                                                group_id: data['group_id'])
           if calendar
             response.status = 201
