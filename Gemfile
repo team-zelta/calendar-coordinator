@@ -21,6 +21,10 @@ gem 'rbnacl'
 # Encode
 gem 'base64'
 
+# Google
+gem 'google-apis-calendar_v3'
+gem 'googleauth'
+
 # Testing
 group :test do
   gem 'minitest'

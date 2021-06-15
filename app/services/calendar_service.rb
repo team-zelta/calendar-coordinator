@@ -11,7 +11,7 @@ module CalendarCoordinator
     def self.create(account_id:, calendars:)
       account = AccountService.get(id: account_id)
       calendars.each do |calendar|
-        next if Calendar.find(gid: calendar['gid'])
+        next if Calendar.find(gid: calendar['gid'], account_id: account_id)
 
         account.add_owned_calendar(calendar)
       end
