@@ -258,19 +258,48 @@ module CalendarCoordinator
           end
         end
 
-        # GET /api/v1/groups/{group_id}/events/{calendar_mode}/{year}-{month}-{day}
-        routing.on 'events' do
-          routing.on String do |calendar_mode|
-            routing.get(String) do |date|
+        # POST /api/v1/groups/{group_id}/events/{calendar_mode}/{year}-{month}-{day}
+        routing.on 'events' do # rubocop:disable Metrics/BlockLength
+          routing.on String do |calendar_mode| # rubocop:disable Metrics/BlockLength
+            routing.post(String) do |date| # rubocop:disable Metrics/BlockLength
               response.status = 200
+              credentials_data = JSON.parse(routing.body.read, object_class: OpenStruct)
+
+              credentials = GoogleCredentials.new(credentials_data).user_refresh_credentials
+              google_calendar = Google::Apis::CalendarV3::CalendarService.new
+              google_calendar.authorization = credentials
+
+              mode_start_time = calendar_mode == 'day' ? 0 : DateTime.parse(date).wday
+              mode_end_time = calendar_mode == 'day' ? 1 : 7 - DateTime.parse(date).wday
+
               group_calendars = GroupService.owned_calendars(group_id: group_id)
               group_calendars ||= raise('Group Calendars not found')
 
               all_events = []
               group_calendars.each do |calendar|
-                events = CalendarService.owned_events_by_date(id: calendar.id, mode: calendar_mode, date: date)
+                account = CalendarService.belonged_accounts_by_gid(gid: calendar.gid)
 
-                account = CalendarService.belonged_accounts(id: calendar.id)
+                google_events = google_calendar.list_events(calendar.gid,
+                                                            single_events: true,
+                                                            order_by: 'startTime',
+                                                            time_min: DateTime.parse(date) - mode_start_time,
+                                                            time_max: DateTime.parse(date) + mode_end_time)
+
+                events = []
+                google_events.items.each do |google_event|
+                  event = Event.new
+                  event.gid = google_event.id
+                  event.summary = google_event.summary
+                  event.status = google_event.status
+                  event.description = google_event.description
+                  event.location = google_event.location
+                  event.start_date_time = google_event.start.date || google_event.start.date_time
+                  event.start_time_zone = google_event.start.time_zone
+                  event.end_date_time = google_event.end.date || google_event.end.date_time
+                  event.end_time_zone = google_event.end.time_zone
+
+                  events.push(event)
+                end
 
                 all_events.push({ username: account.username, events: events.each(&:to_json) })
               end

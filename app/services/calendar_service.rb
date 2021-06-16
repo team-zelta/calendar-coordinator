@@ -44,6 +44,12 @@ module CalendarCoordinator
       AccountService.get(id: calendar.account_id)
     end
 
+    # Get belonged Accounts
+    def self.belonged_accounts_by_gid(gid:)
+      calendar = Calendar.find(gid: gid)
+      AccountService.get(id: calendar.account_id)
+    end
+
     # Get owned Events filter by require date
     def self.owned_events_by_date(id:, mode:, date:) # rubocop:disable Metrics/AbcSize
       # day or week
