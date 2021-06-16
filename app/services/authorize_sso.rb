@@ -8,7 +8,6 @@ module CalendarCoordinator
     def call(access_token)
       github_account = get_github_account(access_token)
       sso_account = find_or_create_sso_account(github_account)
-      puts sso_account
 
       account_and_token(sso_account)
     end
