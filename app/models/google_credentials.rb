@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require 'googleauth'
-require 'googleauth/stores/redis_token_store'
 
 module CalendarCoordinator
   # Convert From Google::Auth::UserRefreshCredentials

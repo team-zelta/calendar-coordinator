@@ -3,7 +3,6 @@
 require 'roda'
 require 'date'
 require 'googleauth'
-require 'googleauth/stores/redis_token_store'
 require 'google/apis/calendar_v3'
 require_relative './app'
 
