@@ -216,13 +216,7 @@ module CalendarCoordinator
               response.status = 200
               credentials_data = JSON.parse(routing.body.read, object_class: OpenStruct)
 
-              credentials = Google::Auth::UserRefreshCredentials.new(client_id: credentials_data.client_id,
-                                                                     client_secret: credentials_data.client_secret,
-                                                                     scope: credentials_data.scope,
-                                                                     access_token: credentials_data.access_token,
-                                                                     refresh_token: credentials_data.refresh_token,
-                                                                     expires_at: credentials_data.expires_at,
-                                                                     grant_type: credentials_data.grant_type)
+              credentials = GoogleCredentials.new(credentials_data).user_refresh_credentials
               google_calendar = Google::Apis::CalendarV3::CalendarService.new
               google_calendar.authorization = credentials
 
