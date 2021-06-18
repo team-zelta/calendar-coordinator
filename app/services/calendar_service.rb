@@ -51,12 +51,11 @@ module CalendarCoordinator
     end
 
     # Get owned Events filter by require date
-    def self.owned_events_by_date(id:, mode:, date:) # rubocop:disable Metrics/AbcSize
+    def self.owned_events_by_date(id:, mode:, date:)
       # day or week
       mode_start_time = mode == 'day' ? 0 : DateTime.parse(date).wday
       mode_end_time = mode == 'day' ? 1 : 7 - DateTime.parse(date).wday
 
-      puts Event.where(calendar_id: id)
       Event.where(calendar_id: id)
            .exclude { end_date_time <= DateTime.parse(date) - mode_start_time }
            .exclude { start_date_time >= DateTime.parse(date) + mode_end_time }
