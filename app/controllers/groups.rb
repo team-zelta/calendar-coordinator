@@ -92,6 +92,24 @@ module CalendarCoordinator
           end
         end
 
+        routing.is 'calendar-account-email' do
+          routing.get do
+            response.status = 200
+            group_calendars = GroupService.owned_calendars(group_id: group_id)
+            group_calendars ? group_calendars.to_json : raise('Group Calendars not found')
+
+            emails = []
+            group_calendars.each do |calendar|
+              account = Account.find(id: calendar.account_id)
+              emails.push(account.email)
+            end
+
+            emails.to_json
+          rescue StandardError => e
+            routing.halt 404, { message: e.message }.to_json
+          end
+        end
+
         routing.on 'accounts' do # rubocop:disable Metrics/BlockLength
           routing.on String do |account_id| # rubocop:disable Metrics/BlockLength
             # GET /api/v1/groups/{group_id}/accounts/{account_id}/delete
@@ -213,11 +231,7 @@ module CalendarCoordinator
           routing.on String do |calendar_mode| # rubocop:disable Metrics/BlockLength
             routing.post(String) do |date| # rubocop:disable Metrics/BlockLength
               response.status = 200
-              credentials_data = JSON.parse(routing.body.read, object_class: OpenStruct)
-
-              credentials = GoogleCredentials.new(credentials_data).user_refresh_credentials
-              google_calendar = Google::Apis::CalendarV3::CalendarService.new
-              google_calendar.authorization = credentials
+              credentials_data_list = JSON.parse(routing.body.read, object_class: OpenStruct)
 
               mode_start_time = calendar_mode == 'day' ? 0 : DateTime.parse(date).wday
               mode_end_time = calendar_mode == 'day' ? 1 : 7 - DateTime.parse(date).wday
@@ -226,7 +240,12 @@ module CalendarCoordinator
               group_calendars ||= raise('Group Calendars not found')
 
               all_events = []
+              cnt = 0
               group_calendars.each do |calendar|
+                credentials = GoogleCredentials.new(credentials_data_list[cnt]).user_refresh_credentials
+                google_calendar = Google::Apis::CalendarV3::CalendarService.new
+                google_calendar.authorization = credentials
+
                 google_events = google_calendar.list_events(calendar.gid,
                                                             single_events: true,
                                                             order_by: 'startTime',
@@ -247,6 +266,8 @@ module CalendarCoordinator
 
                   all_events.push(event)
                 end
+
+                cnt += 1
               end
 
               EventService.common_busy_time(all_events).to_json
@@ -262,11 +283,7 @@ module CalendarCoordinator
           routing.on String do |calendar_mode| # rubocop:disable Metrics/BlockLength
             routing.post(String) do |date| # rubocop:disable Metrics/BlockLength
               response.status = 200
-              credentials_data = JSON.parse(routing.body.read, object_class: OpenStruct)
-
-              credentials = GoogleCredentials.new(credentials_data).user_refresh_credentials
-              google_calendar = Google::Apis::CalendarV3::CalendarService.new
-              google_calendar.authorization = credentials
+              credentials_data_list = JSON.parse(routing.body.read, object_class: OpenStruct)
 
               mode_start_time = calendar_mode == 'day' ? 0 : DateTime.parse(date).wday
               mode_end_time = calendar_mode == 'day' ? 1 : 7 - DateTime.parse(date).wday
@@ -275,7 +292,12 @@ module CalendarCoordinator
               group_calendars ||= raise('Group Calendars not found')
 
               all_events = []
+              cnt = 0
               group_calendars.each do |calendar|
+                credentials = GoogleCredentials.new(credentials_data_list[cnt]).user_refresh_credentials
+                google_calendar = Google::Apis::CalendarV3::CalendarService.new
+                google_calendar.authorization = credentials
+
                 account = CalendarService.belonged_accounts_by_gid(gid: calendar.gid)
 
                 google_events = google_calendar.list_events(calendar.gid,
@@ -301,6 +323,8 @@ module CalendarCoordinator
                 end
 
                 all_events.push({ username: account.username, events: events.each(&:to_json) })
+
+                cnt += 1
               end
 
               all_events.to_json
@@ -316,7 +340,11 @@ module CalendarCoordinator
           response.status = 200
 
           account = AccountService.get(id: @auth_account['id'])
-          group = GroupService.get(id: group_id)
+          group = GroupService.get(id: group_id) 
+          #|| Account.find(id: @auth_account['id'])
+          #                                                 .belonged_groups
+          #                                                 .where(group_id: group_id)
+
           routing.halt 404, { message: 'Group not found' }.to_json unless group
 
           policy = GroupPolicy.new(account, group)
