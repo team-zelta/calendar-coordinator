@@ -340,10 +340,7 @@ module CalendarCoordinator
           response.status = 200
 
           account = AccountService.get(id: @auth_account['id'])
-          group = GroupService.get(id: group_id) 
-          #|| Account.find(id: @auth_account['id'])
-          #                                                 .belonged_groups
-          #                                                 .where(group_id: group_id)
+          group = GroupService.get(id: group_id)
 
           routing.halt 404, { message: 'Group not found' }.to_json unless group
 
