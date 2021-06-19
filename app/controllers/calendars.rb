@@ -102,7 +102,7 @@ module CalendarCoordinator
 
       # GET /api/v1/calendars
       routing.get do
-        account = Account.first(username: @auth_account['username'])
+        account = Account.first(id: @auth_account.id)
         calendars = account.calendars
         JSON.pretty_generate(data: calendars)
       rescue StandardError

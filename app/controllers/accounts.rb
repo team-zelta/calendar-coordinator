@@ -43,7 +43,12 @@ module CalendarCoordinator
         routing.get do
           response.status = 200
           account = AccountService.get(id: account_id)
-          account ? account.to_json : raise('Account not found')
+          raise('Account not found') unless account
+
+          {
+            account: account,
+            auth_token: AuthToken.create(account, AuthScope.new(AuthScope::READ_ONLY))
+          }.to_json
         rescue StandardError => e
           routing.halt 404, { message: e.message }.to_json
         end

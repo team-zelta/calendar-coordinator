@@ -11,8 +11,14 @@ module CalendarCoordinator
       return nil unless headers['AUTHORIZATION']
 
       scheme, auth_token = headers['AUTHORIZATION'].split
-      account_payload = AuthToken.payload(auth_token)
-      scheme.match?(/^Bearer$/i) ? account_payload : nil
+      return nil unless scheme.match?(/^Bearer$/i)
+
+      contents = AuthToken.contents(auth_token)
+
+      {
+        account: Account.first(id: contents['payload']['id']),
+        scope: AuthScope.new(contents['scope'])
+      }
     end
   end
 end

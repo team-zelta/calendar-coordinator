@@ -20,7 +20,8 @@ module CalendarCoordinator
         routing.halt(403, { message: 'TLS/SSL Required' }.to_json)
 
       begin
-        @auth_account = authenticated_account(routing.headers)
+        @auth = authenticated_account(routing.headers)
+        @auth_account = @auth[:account] if @auth
       rescue AuthToken::InvalidTokenError
         routing.halt 403, { message: 'Invalid auth token' }.to_json
       end

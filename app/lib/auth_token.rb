@@ -6,7 +6,7 @@ require_relative 'securable'
 ## Token and Detokenize Authorization Information
 # Usage examples:
 #  token = AuthToken.create({ key: 'value', key2: 12 }, AuthToken::ONE_MONTH)
-#  AuthToken.payload(token)   # => {"key"=>"value", "key2"=>12}
+#  AuthToken.contents(token)   # => {'payload' => payload, 'scope' => scope, 'exp' => expiration}
 class AuthToken
   extend Securable
 
@@ -20,15 +20,15 @@ class AuthToken
   class InvalidTokenError < StandardError; end # rubocop:disable Layout/EmptyLineBetweenDefs
 
   # Create a token from a Hash payload
-  def self.create(payload, expiration = ONE_WEEK)
-    contents = { 'payload' => payload, 'exp' => expires(expiration) }
+  def self.create(payload, scope = AuthScope.new, expiration = ONE_WEEK)
+    contents = { 'payload' => payload, 'scope' => scope, 'exp' => expires(expiration) }
     tokenize(contents)
   end
 
   # Extract data from token
-  def self.payload(token)
+  def self.contents(token)
     contents = detokenize(token)
-    expired?(contents) ? raise(ExpiredTokenError) : contents['payload']
+    expired?(contents) ? raise(ExpiredTokenError) : contents
   end
 
   # Tokenize contents or return nil if no data
