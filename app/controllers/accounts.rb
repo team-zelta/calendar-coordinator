@@ -67,8 +67,13 @@ module CalendarCoordinator
         data = JSON.parse(routing.body.read)
         account = AccountService.create(data: data)
         if account
-          response.status = 201
-          { message: 'Account saved', account_id: account.id }.to_json
+          group_data = JSON.parse({ groupname: account.username }.to_json)
+          puts group_data
+          group = GroupService.create(account_id: account.id, data: group_data)
+          if group
+            response.status = 201
+            { message: 'Account saved', account_id: account.id }.to_json
+          end
         else
           routing.halt 400, { message: 'Save Account failed' }.to_json
         end
@@ -76,6 +81,7 @@ module CalendarCoordinator
         API.logger.warn "MASS-ASSIGNMENT: #{data.keys}"
         routing.halt 400, { message: "Illegal Attributes : #{e}" }.to_json
       rescue StandardError => e
+        puts e.full_message
         API.logger.error "UNKOWN ERROR: #{e.message}"
         routing.halt 500, { message: e.message }.to_json
       end
