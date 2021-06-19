@@ -14,7 +14,7 @@ module CalendarCoordinator
       routing.is 'add-calendar' do
         routing.post do
           data = JSON.parse(routing.body.read)
-          calendar = GroupService.add_calendar(account_id: @auth_account['id'],
+          calendar = GroupService.add_calendar(account_id: @auth_account.id,
                                                calendar_id: data['calendar_id'],
                                                group_id: data['group_id'])
           if calendar
@@ -57,7 +57,7 @@ module CalendarCoordinator
           data = JSON.parse(routing.body.read)
 
           group = GroupService.get(id: data['group_id'])
-          group_join = GroupService.join(account_id: @auth_account['id'], group: group)
+          group_join = GroupService.join(account_id: @auth_account.id, group: group)
           if group_join
             response.status = 201
             { message: 'Group joined', group_id: group_join.id }.to_json
@@ -117,10 +117,10 @@ module CalendarCoordinator
               routing.get do
                 response.status = 200
 
-                account = AccountService.get(id: @auth_account['id'])
+                account = AccountService.get(id: @auth_account.id)
                 group = GroupService.get(id: group_id)
 
-                policy = GroupPolicy.new(account, group)
+                policy = GroupPolicy.new(account: account, group: group, auth_scope: @auth[:scope])
                 raise UnauthorizedError unless policy.can_remove_member?
 
                 result = GroupService.delete_account(group_id, account_id)
@@ -138,10 +138,10 @@ module CalendarCoordinator
               routing.get do
                 response.status = 200
 
-                account = AccountService.get(id: @auth_account['id'])
+                account = AccountService.get(id: @auth_account.id)
                 group = GroupService.get(id: group_id)
 
-                policy = GroupPolicy.new(account, group)
+                policy = GroupPolicy.new(account: account, group: group, auth_scope: @auth[:scope])
                 raise UnauthorizedError unless policy.can_view?
 
                 group_calendar = GroupService.owned_calendars(group_id: group_id)
@@ -187,9 +187,9 @@ module CalendarCoordinator
           routing.get do
             response.status = 200
 
-            account = AccountService.get(id: @auth_account['id'])
+            account = AccountService.get(id: @auth_account.id)
             group = GroupService.get(id: group_id)
-            policy = GroupPolicy.new(account, group)
+            policy = GroupPolicy.new(account: account, group: group, auth_scope: @auth[:scope])
             raise UnauthorizedError unless policy.can_delete?
 
             group_del = GroupService.delete(id: group_id)
@@ -201,10 +201,10 @@ module CalendarCoordinator
 
         routing.is 'update' do
           routing.post do
-            account = AccountService.get(id: @auth_account['id'])
+            account = AccountService.get(id: @auth_account.id)
             group = GroupService.get(id: group_id)
 
-            policy = GroupPolicy.new(account, group)
+            policy = GroupPolicy.new(account: account, group: group, auth_scope: @auth[:scope])
             raise UnauthorizedError unless policy.can_edit?
 
             data = JSON.parse(routing.body.read)
@@ -339,12 +339,12 @@ module CalendarCoordinator
         routing.get do
           response.status = 200
 
-          account = AccountService.get(id: @auth_account['id'])
+          account = AccountService.get(id: @auth_account.id)
           group = GroupService.get(id: group_id)
 
           routing.halt 404, { message: 'Group not found' }.to_json unless group
 
-          policy = GroupPolicy.new(account, group)
+          policy = GroupPolicy.new(account: account, group: group, auth_scope: @auth[:scope])
           raise UnauthorizedError unless policy.can_view?
 
           group.to_hash.merge(policies: policy.summary).to_json
@@ -359,8 +359,7 @@ module CalendarCoordinator
       # GET /api/v1/groups
       routing.get do
         response.status = 200
-
-        account = AccountService.get(id: @auth_account['id'])
+        account = AccountService.get(id: @auth_account.id)
         groups = GroupPolicy::AccountScope.new(account).viewable
 
         JSON.pretty_generate(groups)
@@ -372,7 +371,7 @@ module CalendarCoordinator
       routing.post do
         group_data = JSON.parse(routing.body.read)
 
-        group = GroupService.create(account_id: @auth_account['id'], data: group_data)
+        group = GroupService.create(account_id: @auth_account.id, data: group_data)
         if group
           response.status = 201
           { message: 'Group saved', group_id: group.id }.to_json
