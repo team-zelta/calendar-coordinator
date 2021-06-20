@@ -10,6 +10,10 @@ module CalendarCoordinator
     # Create Calendar
     def self.create(account_id:, calendars:)
       account = AccountService.get(id: account_id)
+      own_calendars = account.owned_calendars
+
+      account.owned_calendars.each(&:destroy) unless own_calendars.nil? || own_calendars.empty?
+
       calendars.each do |calendar|
         next if Calendar.find(gid: calendar['gid'], account_id: account_id)
 
