@@ -49,11 +49,15 @@ module CalendarCoordinator
     # Add Calendar to Group
     def self.add_calendar(account_id:, calendar_id:, group_id:)
       group = get(id: group_id)
+      puts "calendar_id = #{calendar_id}"
       calendar = CalendarService.get(id: calendar_id)
 
       calendar_current = Calendar.where(account_id: account_id).all & group.owned_calendars
-      group.remove_owned_calendar(calendar_current.first) unless calendar_current.empty?
+      puts "calendar_current = #{calendar_current}"
+      group.remove_owned_calendar(calendar_current.first) unless calendar_current.empty? || calendar_current.nil?
 
+      puts "group = #{group}"
+      puts "calendar = #{calendar}"
       group.add_owned_calendar(calendar)
     end
 

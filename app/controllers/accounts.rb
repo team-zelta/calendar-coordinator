@@ -23,7 +23,7 @@ module CalendarCoordinator
             API.logger.warn "MASS-ASSIGNMENT: #{data[0].keys}"
             routing.halt 400, { message: "Illegal Attributes : #{e}" }.to_json
           rescue StandardError => e
-            API.logger.error "UNKOWN ERROR: #{e.message}"
+            API.logger.error "UNKOWN ERROR: #{e.full_message}"
             routing.halt 500, { message: e.message }.to_json
           end
         end
