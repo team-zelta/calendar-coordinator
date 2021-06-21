@@ -9,6 +9,12 @@ module CalendarCoordinator
       github_account = get_github_account(access_token)
       sso_account = find_or_create_sso_account(github_account)
 
+      if sso_account && Group.find(groupname: sso_account.username).nil?
+        group_data = JSON.parse({ groupname: sso_account.username }.to_json)
+
+        GroupService.create(account_id: sso_account.id, data: group_data)
+      end
+
       account_and_token(sso_account)
     end
 

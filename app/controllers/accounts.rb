@@ -68,7 +68,7 @@ module CalendarCoordinator
         account = AccountService.create(data: data)
         if account
           group_data = JSON.parse({ groupname: account.username }.to_json)
-          puts group_data
+
           group = GroupService.create(account_id: account.id, data: group_data)
           if group
             response.status = 201
