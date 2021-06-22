@@ -41,24 +41,14 @@ module CalendarCoordinator
       end
 
       routing.on 'sso' do
-        routing.post 'github' do
+        # POST /auth/sso/{service}, service: google, github
+        routing.post String do |service|
           auth_request = JsonRequestBody.parse_symbolize(request.body.read)
 
-          auth_account = AuthorizeSso.new.call(auth_request[:access_token], 'github')
+          auth_account = AuthorizeSso.new.call(auth_request[:access_token], service)
           { data: auth_account }.to_json
         rescue StandardError => e
           puts "FAILED to validate Github account: #{e.inspect}"
-          puts e.backtrace
-          routing.halt 400
-        end
-
-        routing.post 'google' do
-          auth_request = JsonRequestBody.parse_symbolize(request.body.read)
-
-          auth_account = AuthorizeSso.new.call(auth_request[:access_token], 'google')
-          { data: auth_account }.to_json
-        rescue StandardError => e
-          puts "FAILED to validate GOOGLE account: #{e.inspect}"
           puts e.backtrace
           routing.halt 400
         end

@@ -15,6 +15,7 @@ module CalendarCoordinator
       end
 
       sso_account = find_or_create_sso_account(account)
+
       account_and_token(sso_account)
     end
 
@@ -33,17 +34,24 @@ module CalendarCoordinator
 
     def get_google_account(access_token)
       response = HTTP.auth("Bearer #{access_token}")
-                     .post('https://www.googleapis.com/oauth2/v3/userinfo')
+                     .post(ENV['GOOGLE_USERINFO_URL'])
 
       userinfo = JSON.parse(response.body, object_class: OpenStruct)
-
       { username: "#{userinfo.name.delete(' ')}@google", email: userinfo.email }
     end
 
     def find_or_create_sso_account(account_data)
-      Account.first(email: account_data[:email]) ||
-        Account.create(username: account_data[:username],
-                       email: account_data[:email])
+      sso_account = Account.first(email: account_data[:email]) ||
+                    Account.create(username: account_data[:username],
+                                   email: account_data[:email])
+
+      if sso_account && Group.find(account_id: sso_account.id).nil?
+        group_data = JSON.parse({ groupname: sso_account.username }.to_json)
+
+        GroupService.create(account_id: sso_account.id, data: group_data)
+      end
+
+      sso_account
     end
 
     def account_and_token(account)
