@@ -46,7 +46,7 @@ module CalendarCoordinator
                                    email: account_data[:email])
 
       if sso_account && Group.find(account_id: sso_account.id).nil?
-        group_data = JSON.parse({ groupname: sso_account.username }.to_json)
+        group_data = JSON.parse({ groupname: sso_account.email }.to_json)
 
         GroupService.create(account_id: sso_account.id, data: group_data)
       end

@@ -67,7 +67,7 @@ module CalendarCoordinator
         data = JSON.parse(routing.body.read)
         account = AccountService.create(data: data)
         if account
-          group_data = JSON.parse({ groupname: account.username }.to_json)
+          group_data = JSON.parse({ groupname: account.email }.to_json)
 
           group = GroupService.create(account_id: account.id, data: group_data)
           if group
