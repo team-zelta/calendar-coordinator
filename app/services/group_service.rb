@@ -81,7 +81,7 @@ module CalendarCoordinator
       group = get(id: group_id)
 
       calendar = group.owned_calendars.select { |own_calendar| own_calendar.account_id == account_id }.first # rubocop:disable Performance/Detect
-      calendar.remove_belonged_group(group)
+      calendar&.remove_belonged_group(group)
 
       account.remove_belonged_group(group)
     end
