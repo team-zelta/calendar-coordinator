@@ -1,14 +1,20 @@
 # frozen_string_literal: true
 
 require 'http'
+require 'google/apis/oauth2_v2'
 
 module CalendarCoordinator
   # Find or create an SsoAccount based on Github code
   class AuthorizeSso
-    def call(access_token)
-      github_account = get_github_account(access_token)
-      sso_account = find_or_create_sso_account(github_account)
+    def call(access_token, service)
+      case service
+      when 'github'
+        account = get_github_account(access_token)
+      when 'google'
+        account = get_google_account(access_token)
+      end
 
+      sso_account = find_or_create_sso_account(account)
       account_and_token(sso_account)
     end
 
@@ -23,6 +29,15 @@ module CalendarCoordinator
 
       account = JSON.parse(gh_response, object_class: OpenStruct)
       { username: "#{account.login}@github", email: account.email }
+    end
+
+    def get_google_account(access_token)
+      response = HTTP.auth("Bearer #{access_token}")
+                     .post('https://www.googleapis.com/oauth2/v3/userinfo')
+
+      userinfo = JSON.parse(response.body, object_class: OpenStruct)
+
+      { username: "#{userinfo.name.delete(' ')}@google", email: userinfo.email }
     end
 
     def find_or_create_sso_account(account_data)
