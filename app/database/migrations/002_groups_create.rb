@@ -8,7 +8,7 @@ Sequel.migration do
       uuid :id, primary_key: true
       uuid :account_id, foreign_key: true, table: :accounts
 
-      String :groupname, null: false, unique: true
+      String :groupname, null: false
       String :password_digest
 
       DateTime :created_at
