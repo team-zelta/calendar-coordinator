@@ -66,7 +66,7 @@ describe 'Test CalendarCoordinator Web API - calendar' do
     _(result['message']).must_equal 'Calendar not found'
   end
 
-  it 'SECURITY: should prevent basic SQL injection targeting IDs' do
+  it 'SECURITY SQL INJECTION: should prevent basic SQL injection targeting IDs' do
     get 'api/v1/calendars/2%20or%20id%3E0'
 
     # deliberately not reporting error -- don't give attacker information
@@ -87,7 +87,7 @@ describe 'Test CalendarCoordinator Web API - calendar' do
     _(result['message']).must_equal 'Calendar saved'
   end
 
-  it 'SECURITY: should not be able to create calendar by mass assignment' do
+  it 'SECURITY MASS ASSIGNMENT: should not be able to create calendar by mass assignment' do
     sample_calendar = DATA[:calendars][1].clone
     sample_calendar['id'] = '00000000-0000-0000-0000-000000000000'
     sample_calendar['gid'] = 'abc001'
@@ -99,20 +99,4 @@ describe 'Test CalendarCoordinator Web API - calendar' do
 
     _(last_response.status).must_equal 400
   end
-
-  ## Wait for User model
-
-  # it 'SAD: should not be able to create calendar due to existed calendar under the same account' do
-  #   calendar_id = 'sample1@gmail.com'
-
-  #   event = CalendarCoordinator::Event.new(id: 'abc001',
-  #                                          summary: 'Project Meeting')
-
-  #   req_header = { 'Content-Type' => 'application/json' }
-  #   post "api/v1/calendars/#{calendar_id}/events", event.to_json, req_header
-
-  #   result = JSON.parse(last_response.body)
-  #   _(last_response.status).must_equal 200
-  #   _(result['message']).must_equal 'Event existed'
-  # end
 end

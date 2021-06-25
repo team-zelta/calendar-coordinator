@@ -61,3 +61,6 @@ app/database/store/*
 config/secrets.yml
 
 .bundle/
+
+coverage/*
+!coverage/.resultset.json

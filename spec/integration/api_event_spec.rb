@@ -61,7 +61,7 @@ describe 'Test CalendarCoordinator Web API - event' do
     _(last_response.status).must_equal 404
   end
 
-  it 'SECURITY: should prevent basic SQL injection targeting IDs' do
+  it 'SECURITY SQL INJECTION: should prevent basic SQL injection targeting IDs' do
     calendar_id = CalendarCoordinator::Calendar.first.id
     get "api/v1/calendars/#{calendar_id}/events/2%20or%20id%3E0"
 
@@ -85,7 +85,7 @@ describe 'Test CalendarCoordinator Web API - event' do
     _(result['message']).must_equal 'Event saved'
   end
 
-  it 'SECURITY: should not be able to create event with mass assignment' do
+  it 'SECURITY MASS ASSIGNMENT: should not be able to create event with mass assignment' do
     calendar_id = CalendarCoordinator::Calendar.first.id
 
     event = DATA[:events][0].clone
