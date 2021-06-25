@@ -71,7 +71,7 @@ describe 'Test CalendarCoordinator Web API - group' do
     _(last_response.status).must_equal 404
   end
 
-  it 'SECURITY: should prevent basic SQL injection targeting IDs' do
+  it 'SECURITY SQL INJECTION: should prevent basic SQL injection targeting IDs' do
     create_database
 
     account = DATA[:accounts].clone[0]
@@ -100,7 +100,7 @@ describe 'Test CalendarCoordinator Web API - group' do
     _(result['message']).must_equal 'Group saved'
   end
 
-  it 'SECURITY: should not be able to create group with mass assignment' do
+  it 'SECURITY MASS ASSIGNMENT: should not be able to create group with mass assignment' do
     DATA[:accounts].each do |account|
       CalendarCoordinator::AccountService.create(data: account)
     end
