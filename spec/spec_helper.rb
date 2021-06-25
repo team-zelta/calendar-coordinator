@@ -1,15 +1,15 @@
 # frozen_string_literal: true
 
+require 'simplecov'
+SimpleCov.start
+
 ENV['RACK_ENV'] = 'test'
+
+require_relative 'test_load_all'
 
 require 'minitest/autorun'
 require 'minitest/rg'
 require 'yaml'
-require 'simplecov'
-
-require_relative 'test_load_all'
-
-SimpleCov.start
 
 # Delete database
 def wipe_database
