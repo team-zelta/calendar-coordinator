@@ -12,7 +12,6 @@ module CalendarCoordinator
       # All requests in this route require signed requests
       begin
         @request_data = SignedRequest.new.parse(request.body.read)
-        puts "==DEBUG== @request_data: #{@request_data}"
       rescue SignedRequest::VerificationError
         routing.halt '403', { message: 'Must sign request' }.to_json
       end
