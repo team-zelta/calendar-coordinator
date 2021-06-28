@@ -64,8 +64,10 @@ module CalendarCoordinator
 
       # POST /api/v1/accounts
       routing.post do
-        data = JSON.parse(routing.body.read)
-        account = AccountService.create(data: data)
+        @request_data = SignedRequest.new.parse(request.body.read)
+        puts "==DEBUG== @request_data: #{@request_data.inspect}"
+        # data = JSON.parse(routing.body.read)
+        account = AccountService.create(data: @request_data)
         if account
           group_data = JSON.parse({ groupname: account.email }.to_json)
 

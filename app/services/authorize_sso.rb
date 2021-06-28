@@ -35,9 +35,8 @@ module CalendarCoordinator
     def get_google_account(access_token)
       response = HTTP.auth("Bearer #{access_token}")
                      .post(ENV['GOOGLE_USERINFO_URL'])
-
       userinfo = JSON.parse(response.body, object_class: OpenStruct)
-      { username: "#{userinfo.name.delete(' ')}@google", email: userinfo.email }
+      { username: "#{userinfo.email.split('@')[0]}@google", email: userinfo.email }
     end
 
     def find_or_create_sso_account(account_data)
